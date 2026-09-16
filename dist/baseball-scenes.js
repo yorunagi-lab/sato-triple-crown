@@ -1,15 +1,13 @@
-// Original vector scenes: independent side, front and overhead camera drawings.
+// Original vector scenes: independent side, rear and overhead camera drawings.
 // All markup is static artwork, never interpolated from visitor input.
 const ink = '#141c13', fur = '#404d3b', skin = '#a6b399', gold = '#f5cf60';
 const ball = '<circle r="7" fill="#fffbea" stroke="#b4baa6" stroke-width="1.2"/><path d="M-3-6Q2 0-3 6M3-6Q-2 0 3 6" fill="none" stroke="#c36651" stroke-width="1"/>';
-const face = `<path d="M-39-24L-37-49L-20-39L-5-56L9-39L30-49L34-29C53-6 44 33 26 46Q0 61-29 44C-48 28-53-7-39-24Z" fill="${fur}" stroke="${ink}" stroke-width="4"/>
-  <ellipse cx="-45" cy="3" rx="10" ry="16" fill="${skin}" stroke="${ink}" stroke-width="4"/><ellipse cx="45" cy="3" rx="10" ry="16" fill="${skin}" stroke="${ink}" stroke-width="4"/>
-  <path d="M-34-11Q-17-25 0-7Q19-25 35-11L29 23H-29Z" fill="${skin}"/>
-  <path d="M-32-12L-9-5M10-5L33-12" stroke="${ink}" stroke-width="7" stroke-linecap="round"/>
-  <ellipse cx="-17" cy="4" rx="4" ry="5" fill="${ink}"/><ellipse cx="18" cy="4" rx="4" ry="5" fill="${ink}"/>
-  <path d="M-32 20Q-28 10 0 15Q29 10 32 22Q33 46 0 48Q-32 47-32 20Z" fill="${skin}" stroke="${ink}" stroke-width="3"/>
-  <path d="M-11 17Q0 11 11 17L8 27H-8Z" fill="${ink}"/><path d="M-17 34Q0 44 18 33" fill="none" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>
-  <path d="M-45-26Q0-43 45-26L43-12Q0-27-43-12Z" fill="${gold}" stroke="${ink}" stroke-width="3"/><path d="M42-25L67-36L60-17L70-5L44-12Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
+const rearHead = `<ellipse cx="-44" cy="4" rx="10" ry="15" fill="#6e7e60" stroke="${ink}" stroke-width="4"/><ellipse cx="44" cy="4" rx="10" ry="15" fill="#6e7e60" stroke="${ink}" stroke-width="4"/>
+  <path d="M-39-24L-37-49L-20-39L-5-56L9-39L30-49L34-29Q52-6 38 25L24 44Q0 55-26 43L-40 23Q-51-4-39-24Z" fill="${fur}" stroke="${ink}" stroke-width="4"/>
+  <path d="M-25-31Q0-44 25-29L29 13Q20 35 0 39Q-25 29-29 10Z" fill="#56654a"/>
+  <path d="M-43-17Q0-3 43-17L42-3Q0 10-42-3Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>
+  <path d="M-4-5L-21 24L-7 20L0 28L7 1M5-5L24 17L30 11L18-9Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>
+  <path d="M-8-10Q0-17 9-9L7 2Q0 7-8 1Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
 const sideFace = `<path d="M-36-31L-29-51L-12-40L4-54L20-33Q37-21 36-2L52 8L53 28Q41 47 7 44Q-36 46-43 15Q-53-14-36-31Z" fill="${fur}" stroke="${ink}" stroke-width="4"/>
   <path d="M8-12Q31-19 34-1L49 8L47 28Q33 43 9 33L-2 16Z" fill="${skin}" stroke="${ink}" stroke-width="3"/><ellipse cx="-25" cy="5" rx="12" ry="17" fill="#829075" stroke="${ink}" stroke-width="4"/>
   <path d="M9-9L30-5" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><circle cx="25" cy="3" r="4" fill="${ink}"/><path d="M35 9L47 12L43 20H34Z" fill="${ink}"/><path d="M22 28L41 28" stroke="${ink}" stroke-width="3"/>
@@ -37,13 +35,19 @@ function contact(x, y, cls = '') {
 function sideHit() {
   return svg(`${field}${sideBatter()}<path class="hit-trail" d="M324 172L540 98" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(324,172)}<g class="hit-ball-side">${ball}</g>`);
 }
-function frontHit() {
-  return svg(`<g class="scene-scenery"><path d="M280 155L95 340M280 155L465 340" stroke="#ede7c9" stroke-width="2"/><path d="M263 290H291L300 308L278 321L257 307Z" fill="#f3efd7"/></g>
-    <g class="front-batter"><path d="M215 228L195 302L236 306L260 251L291 299L337 299L310 217Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
-    <path d="M192 131Q159 181 198 250Q270 281 328 241Q351 183 314 130Z" fill="${fur}" stroke="${ink}" stroke-width="5"/><path d="M228 149Q266 136 299 160L306 223Q267 265 221 226Z" fill="#93a384"/>
-    <text x="264" y="245" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="38">8</text>${battingRig('front')}
-    <g transform="translate(258 106) scale(.96)">${face}</g></g>
-    <path class="front-speed" d="M347 217L476 152M350 226L499 192" stroke="${gold}" stroke-width="2"/>${contact(345,218)}<g class="hit-ball-front">${ball}</g>`);
+function rearHit() {
+  // Arms and bat sit beyond the back: the torso occludes them as the swing
+  // crosses the body, instead of showing forearms through the shoulder blades.
+  return svg(`<g class="scene-scenery"><path d="M141 249L-60 10M141 249L429 10" stroke="#ede7c9" stroke-width="2"/><path d="M125 236H157L162 252L141 265L120 252Z" fill="#f3efd7"/></g>
+    <g class="rear-batter"><path d="M213 226L194 296Q209 309 235 301L258 254L286 298Q309 307 336 296L307 222Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
+    <path d="M197 286L230 290M294 287L329 284" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
+    ${battingRig('rear')}
+    <path d="M202 131Q176 139 184 174L201 226Q211 253 261 258Q302 255 319 229L337 174Q340 139 307 129Q257 111 202 131Z" fill="${fur}" stroke="${ink}" stroke-width="5"/>
+    <path d="M204 148Q226 130 254 151L250 184Q226 175 205 179ZM266 151Q293 130 316 147L313 178Q291 173 270 184Z" fill="#58694c"/>
+    <path d="M260 151V183M205 218Q213 243 235 247M313 217Q305 242 282 248" stroke="#2f3e29" stroke-width="4" stroke-linecap="round"/>
+    <text x="260" y="239" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="51">8</text>
+    <g class="rear-head" transform="translate(260 106) scale(.96)">${rearHead}</g></g>
+    <path class="rear-speed" d="M141 193L119 106M133 193L89 113" stroke="${gold}" stroke-width="2"/>${contact(141,197)}<g class="hit-ball-rear">${ball}</g>`);
 }
 function topHit() {
   return svg(`<g class="scene-scenery"><path d="M280 26L519 214L280 340L41 214Z" stroke="#c1bb89" stroke-width="2"/><path d="M280 295L29 105M280 295L531 105" stroke="#f3eccc" stroke-width="2"/><path d="M268 286H292V299L280 309L268 299Z" fill="#fff2d4"/></g>
@@ -95,7 +99,7 @@ function sliding() {
 }
 
 export function baseballScene(metric) {
-  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-front" style="--start:1.2s"><span class="camera-label">02 / FRONT — 正面</span>${frontHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
+  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-rear" style="--start:1.2s"><span class="camera-label">02 / REAR — 真後ろ</span>${rearHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
   if (metric === 'hr') return `<div class="camera-frame"><span class="camera-label">FULL SWING → STAND IN</span>${homeRun()}</div>`;
   return `<div class="camera-frame"><span class="camera-label">HEADFIRST SLIDE → HOME</span>${sliding()}</div>`;
 }
@@ -107,9 +111,9 @@ const poses = {
     arms: [{ shoulder: [153, 151], upper: 52, lower: 50, bend: 1 }, { shoulder: [201, 148], upper: 46, lower: 45, bend: -1 }],
     keys: [[0, 174, 157, 128, 42], [.22, 181, 160, 168, 50], [.46, 226, 181, 335, 170], [.70, 224, 165, 252, 88], [1, 211, 161, 98, 117]],
   },
-  front: {
-    arms: [{ shoulder: [204, 158], upper: 64, lower: 64, bend: 1 }, { shoulder: [310, 156], upper: 62, lower: 62, bend: -1 }],
-    keys: [[0, 315, 182, 362, 85], [.22, 310, 191, 407, 145], [.46, 266, 208, 356, 220], [.70, 239, 200, 248, 157], [1, 211, 181, 127, 91]],
+  rear: {
+    arms: [{ shoulder: [316, 158], upper: 64, lower: 64, bend: -1 }, { shoulder: [210, 156], upper: 62, lower: 62, bend: 1 }],
+    keys: [[0, 205, 182, 158, 85], [.22, 210, 191, 113, 145], [.46, 254, 208, 132, 196], [.70, 281, 200, 272, 157], [1, 309, 181, 393, 91]],
   },
   top: {
     arms: [{ shoulder: [181, 229], upper: 54, lower: 53, bend: 1 }, { shoulder: [240, 223], upper: 50, lower: 50, bend: -1 }],
