@@ -4,17 +4,18 @@
 
 ## 現在の状態
 
-- 実際に取得した成績データを同梱しています。取得日時・成績対象日は画面と `dist/data.json` で確認できます。
-- GitHub Actionsで14テスト、データ取得・検証・保存の成功を確認しました（2026年9月16日21:54 JST）。
-- **初回公開待ち**：Pagesが未設定のため公開処理は停止しています。Settings → Pages → SourceをGitHub Actionsに設定し、再実行が必要です。
-- 別の確認用サイトは初回取得データのスナップショットです。常設URLと自動更新はGitHub Pages側で運用します。
-- GitHub Pages用の自動取得・検証・再公開ワークフローを同梱しています。以下の初回設定が完了し、Actionsが成功すると定期運用を開始できます。
-- 独自ドメイン、別のレンタルサーバー、外部DB、APIキーは不要です。
+- **公開中：https://yorunagi-lab.github.io/sato-triple-crown/**
+- GitHub Actionsで14テスト、実データの取得・検証・保存、Pages公開に成功しました。
+- 2026年9月16日22:21 JSTの取得データが公開URLから取得できることを確認済みです。成績対象日は2026年9月15日です。取得時刻と元データの更新時刻は別です。
+- 公開HTML・CSS・JavaScript・JSONのHTTPS応答がすべて200であることを確認しました。
+- 1日7回の定期実行を設定済みです。混雑による遅延や取得元の更新待ちがあり、ライブ速報ではありません。
+- 初回公開のための利用者側の追加操作はありません。独自ドメイン、レンタルサーバー、外部DB、APIキーの購入も不要です。
+- 別の確認用サイトは初回取得データのスナップショットです。今後は上記の公開URLを使用します。
 
-## 公開先と初回設定
+## 公開先と設定の再確認
 
 - リポジトリ：https://github.com/yorunagi-lab/sato-triple-crown
-- 公開予定URL：https://yorunagi-lab.github.io/sato-triple-crown/
+- 公開URL：https://yorunagi-lab.github.io/sato-triple-crown/
 - サイト一式は登録済みです。READMEを付けずにリポジトリを作成しても支障はありません。
 - 公開済みかどうかは、Actionsの実行結果とSettings → Pagesで確認します。
 
@@ -88,7 +89,7 @@ node scripts/check_static.mjs
 
 ## 検証範囲
 
-順位・打率の厳密比較・同順位・試算・取得失敗時の保持・取得停止・日時解釈の14テスト、およびHTMLの参照先・JavaScriptの構文・実データの整合性を確認しています。スマホ実機とブラウザでの目視・操作検証は未実施です。実験的WebMCP連携は対応実行環境がないため未検証で、通常の画面操作には必須ではありません。GitHub上での初回のデータ取得・保存は成功しています。スケジュール起動の継続とPages公開は、初回公開設定後に確認が必要です。
+順位・打率の厳密比較・同順位・試算・取得失敗時の保持・取得停止・日時解釈の14テスト、およびHTMLの参照先・JavaScriptの構文・実データの整合性を確認しています。スマホ実機とブラウザでの目視・操作検証は未実施です。実験的WebMCP連携は対応実行環境がないため未検証で、通常の画面操作には必須ではありません。GitHub上でのデータ取得・保存・Pages公開と公開URLのHTTPS応答を確認済みです。スケジュール起動の継続については、今後のActions履歴とサイト内の更新日時で確認できます。
 
 参考：
 - [GitHub Pagesの公開元設定](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)

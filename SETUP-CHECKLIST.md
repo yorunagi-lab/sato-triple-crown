@@ -1,26 +1,31 @@
-# 公開までの確認事項
+# 公開完了
 
-## 完了
+公開URL：https://yorunagi-lab.github.io/sato-triple-crown/
+リポジトリ：https://github.com/yorunagi-lab/sato-triple-crown
+実行結果：https://github.com/yorunagi-lab/sato-triple-crown/actions/runs/35098544056
 
-- [x] 公開リポジトリ `yorunagi-lab/sato-triple-crown` を作成
-- [x] GitHub連携アプリを対象リポジトリにインストール
-- [x] README追加と書き込み権限を確認
-- [x] サイト一式と自動更新ワークフローを登録
+## 完了した作業
+
+- [x] 公開リポジトリとGitHub連携を設定
+- [x] サイト本体、データ取得処理、自動更新ワークフローを登録
 - [x] GitHub上で14テストに成功
-- [x] 最新データの取得・検証・保存に成功（2026年9月16日21:54 JST）
+- [x] 最新データの取得・検証・保存に成功
+- [x] Pagesの公開元をGitHub Actionsに設定
+- [x] Pages公開に成功
+- [x] 公開HTML・CSS・JavaScript・JSONのHTTPS応答200を確認
+- [x] 公開データの取得成功・scheduledモードを確認
+- [x] 1日7回の定期実行を設定
 
-## 初回公開
+2026年9月16日22:21 JST取得分で確認しました。成績対象日は9月15日です。定期実行が継続して起動することは、以降のActions履歴で確認します。
 
-- [ ] Settings → Pages → Sourceを **GitHub Actions** に設定
-- [ ] サイト一式登録後、**Update stats and deploy** の成功を確認
-- [ ] 公開URLで成績・取得日時・確認版表示の解除を確認
+## あなたが行う作業
 
-予定URL：https://yorunagi-lab.github.io/sato-triple-crown/
-Pages設定：https://github.com/yorunagi-lab/sato-triple-crown/settings/pages
-実行結果：https://github.com/yorunagi-lab/sato-triple-crown/actions
+初回公開のための残作業はありません。スマホで公開URLを開き、見た目や操作に気になる点があれば知らせてください。実機での表示・操作確認は未実施です。
 
-初回実行は **Configure Pages** で停止しています。Pagesが未設定であることを確認済みです。上記設定後にこちらから再実行し、公開URLを確認します。ファイル登録やコマンド操作は不要です。
+独自ドメイン、SSL証明書、レンタルサーバー、DB、APIキーの購入は不要です。独自ドメインへの変更は任意です。
 
-**購入不要：** 独自ドメイン、SSL証明書、レンタルサーバー、DB、APIキー。まずはGitHub Pagesの標準URLで開始できます。
+## 運用時
 
-確認用サイトのURLは別のスナップショットです。定期運用には上記GitHub PagesのURLを使用します。
+- 更新日時と成績対象日はサイト内で確認できます。ライブ速報ではありません。
+- 自動更新の停止・障害時の確認方法はREADMEを参照してください。
+- 以前の確認用URLは別のスナップショットです。今後は上記のGitHub Pages URLを利用します。
