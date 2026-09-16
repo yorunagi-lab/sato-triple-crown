@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101114">
+  <meta name="description" content="佐藤輝明選手の打率・本塁打・打点、三冠王への現在地を追う非公式ダッシュボード。">
+  <title>佐藤輝明｜三冠王への道</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f7c941'/%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='24' font-weight='900' text-anchor='middle' fill='%23101114'%3E8%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="#top"><b>SATO<span>8</span></b><span>TRIPLE CROWN</span></a><span class="season-label">2026 CENTRAL LEAGUE</span></header>
+  <main id="top">
+    <section class="hero"><div><p class="eyebrow">佐藤輝明 / 阪神タイガース</p><h1>三冠王への道<span>THE CHASE FOR THREE.</span></h1><p class="hero-note">打率、本塁打、打点。三つの頂点への現在地。</p></div><div class="crown-summary" id="crown-summary"><span>現在の首位部門</span><strong>—<small>/ 3</small></strong><span>データを確認しています</span></div></section>
+    <div class="data-bar"><span id="data-time">データを読み込んでいます</span><button id="refresh-button" type="button">データ再読込 <span aria-hidden="true">↻</span></button></div>
+    <p id="status-message" class="notice" role="status" hidden></p>
+    <section class="metrics" id="metrics" aria-label="三冠の現在地"></section>
+    <section class="race-section" aria-labelledby="race-heading"><div class="section-heading"><div><p class="eyebrow">TITLE RACE</p><h2 id="race-heading">ライバルとの距離</h2></div><p>同数・同率の首位を含みます</p></div><div class="leaderboards" id="leaderboards"></div></section>
+    <section id="scenario-section" class="scenario-section" aria-labelledby="scenario-heading"></section>
+    <section id="form-section" class="form-section" aria-label="直近の打撃とシーズン成績"></section>
+    <section class="cheer-section"><div><p class="eyebrow">ONE SWING CLOSER</p><h2>次の一打を、待つ。</h2></div><button id="cheer-button" type="button">佐藤輝明にエールを送る <span aria-hidden="true">↗</span></button><p id="cheer-message" aria-live="polite">この画面だけの応援演出です</p></section>
+    <section class="notes"><details><summary>データ・順位・試算について</summary><div id="methodology"></div></details></section>
+    <noscript><p class="notice">成績の表示にはJavaScriptを有効にしてください。</p></noscript>
+  </main>
+  <footer><span class="footer-brand">SATO 8 / TRIPLE CROWN</span><p>非公式ファンサイト。球団・選手・NPB・データ提供元とは関係ありません。</p><p>成績データ：<a href="https://baseballdata.jp/" target="_blank" rel="noopener noreferrer">baseballdata.jp</a> · <a href="./data.json" target="_blank" rel="noopener">取得データ</a></p></footer>
+</body>
+</html>

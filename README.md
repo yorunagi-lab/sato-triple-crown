@@ -9,19 +9,18 @@
 - GitHub Pages用の自動取得・検証・再公開ワークフローを同梱しています。以下の初回設定が完了し、Actionsが成功すると定期運用を開始できます。
 - 独自ドメイン、別のレンタルサーバー、外部DB、APIキーは不要です。
 
-## あなたが行う作業
+## 公開先と初回設定
 
-### 必須：GitHub Pagesで常設運用を開始する場合
+- リポジトリ：https://github.com/yorunagi-lab/sato-triple-crown
+- 公開予定URL：https://yorunagi-lab.github.io/sato-triple-crown/
+- サイト一式は登録済みです。READMEを付けずにリポジトリを作成しても支障はありません。
+- 公開済みかどうかは、Actionsの実行結果とSettings → Pagesで確認します。
 
-1. GitHubにログイン。未登録ならアカウントを作成します。
-2. 公開リポジトリ `sato-triple-crown` を作成します。初期ブランチは `main`。PrivateではプランによりPages利用条件が変わるため、本手順はPublic前提です。
-3. 配布ZIPを展開し、内容をリポジトリ直下にアップロードします。ZIPそのものをアップロードするのではありません。`.github/workflows/update-and-deploy.yml`、`dist/`、`scripts/`、`tests/` が必要です。`.github` が非表示で選べない場合は、GitHubの「Add file → Create new file」で `.github/workflows/update-and-deploy.yml` を作成し、同名ファイルの本文を貼り付けてください。
-4. リポジトリの **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定します。
-5. **Settings → Actions → General → Workflow permissions** を **Read and write permissions** にして保存します。組織管理で変更できない場合は管理者の設定が必要です。
-6. **Actions → Update stats and deploy → Run workflow → main → Run workflow** を実行します。Actionsが無効と表示される場合は有効化します。
-7. 成功後、Settings → Pagesに表示されたURLを開きます。`確認版`の表示が消え、取得日時が新しくなっていることを確認します。
+1. **Settings → Pages → Build and deployment → Source** を **GitHub Actions** に設定します。
+2. **Actions → Update stats and deploy** の実行結果を確認します。初回がPages設定前に失敗した場合は **Re-run all jobs**、または **Run workflow → main → Run workflow** を実行します。
+3. 成功後、Pagesに表示されたURLを開きます。`確認版`の表示が消え、取得日時が新しくなっていることを確認します。
 
-初回ファイル登録直後、Pages設定前に自動実行が失敗しても、4〜6を完了して再実行すれば確認できます。実行が赤く終了した場合は、失敗したステップの画面をこの会話に送れば原因を切り分けられます。
+ワークフローは必要な書き込み権限をファイル内で指定しています。データ保存時に403で失敗した場合だけ、Settings → Actions → Generalの権限設定・アカウント側の制限を確認します。
 
 ### 任意
 
