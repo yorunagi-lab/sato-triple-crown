@@ -5,6 +5,9 @@
 - [x] 公開リポジトリ `yorunagi-lab/sato-triple-crown` を作成
 - [x] GitHub連携アプリを対象リポジトリにインストール
 - [x] README追加と書き込み権限を確認
+- [x] サイト一式と自動更新ワークフローを登録
+- [x] GitHub上で14テストに成功
+- [x] 最新データの取得・検証・保存に成功（2026年9月16日21:54 JST）
 
 ## 初回公開
 
@@ -16,7 +19,7 @@
 Pages設定：https://github.com/yorunagi-lab/sato-triple-crown/settings/pages
 実行結果：https://github.com/yorunagi-lab/sato-triple-crown/actions
 
-サイト登録、実行結果の確認、修正は接続から進めます。初回がPages設定前に失敗した場合は設定後に再実行します。
+初回実行は **Configure Pages** で停止しています。Pagesが未設定であることを確認済みです。上記設定後にこちらから再実行し、公開URLを確認します。ファイル登録やコマンド操作は不要です。
 
 **購入不要：** 独自ドメイン、SSL証明書、レンタルサーバー、DB、APIキー。まずはGitHub Pagesの標準URLで開始できます。
 
