@@ -22,6 +22,14 @@ const data = validateSnapshot(JSON.parse(fs.readFileSync(path.join(dist, 'data.j
 const { validateHistory, gameTrend } = await import('../dist/insight-data.js');
 validateHistory(JSON.parse(fs.readFileSync(path.join(dist, 'history.json'), 'utf8')), data.season);
 gameTrend(data);
+const { buildPage, sitemap } = await import('./build_seo.mjs');
+const status = JSON.parse(fs.readFileSync(path.join(dist, 'fetch-status.json'), 'utf8'));
+const rebuilt = buildPage(html, data, status);
+for (const name of ['metadata', 'crown', 'time', 'latest', 'metrics', 'boards', 'methodology']) {
+  const block = page => page.split(`<!-- seo:${name}:start -->`)[1]?.split(`<!-- seo:${name}:end -->`)[0];
+  if (block(html) !== block(rebuilt)) throw new Error(`Published HTML is out of sync with data.json: ${name}. Run node scripts/build_seo.mjs`);
+}
+if (fs.readFileSync(path.join(dist, 'sitemap.xml'), 'utf8') !== sitemap) throw new Error('Sitemap differs from the canonical page');
 for (const mode of ['frozen', 'season']) projectScenario(data, 60, mode);
 if (html.includes('TODO') || html.includes('Lorem ipsum')) throw new Error('Placeholder content');
 console.log(`Static entrypoints, JavaScript and real snapshot validated: ${data.leading_categories}/3 categories; through ${data.data_through}`);

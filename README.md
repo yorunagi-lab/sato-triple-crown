@@ -5,7 +5,7 @@
 ## 現在の状態
 
 - **公開中：https://yorunagi-lab.github.io/sato-triple-crown/**
-- 初回公開ではGitHub Actionsで14テスト、実データの取得・検証・保存、Pages公開に成功しました。現在は共有カウンター・試合比較・履歴保存・コンボ・共有文の検証を含む34テストです。
+- 初回公開ではGitHub Actionsで14テスト、実データの取得・検証・保存、Pages公開に成功しました。現在は共有カウンター・試合比較・履歴保存・コンボ・共有文・静的HTMLの検証を含む40テストです。
 - 2026年9月16日22:21 JSTの取得データが公開URLから取得できることを確認済みです。成績対象日は2026年9月15日です。取得時刻と元データの更新時刻は別です。
 - 公開HTML・CSS・JavaScript・JSONのHTTPS応答がすべて200であることを確認しました。
 - 1日7回の定期実行を設定済みです。混雑による遅延や取得元の更新待ちがあり、ライブ速報ではありません。
@@ -96,6 +96,7 @@ GitHub Actions上のPython 3.12がbaseballdata.jpのHTMLから必要な数値だ
 ```sh
 python scripts/update_data.py --mode manual
 python scripts/record_history.py
+node scripts/build_seo.mjs
 python -m http.server 8000 --directory dist
 ```
 
@@ -114,6 +115,7 @@ node scripts/check_static.mjs
 - `dist/`：公開するHTML、CSS、JavaScript、JSON、SVG・PNG
 - `scripts/update_data.py`：取得・検証・保存
 - `scripts/record_history.py`：正常取得した日次の三冠争いを保存
+- `scripts/build_seo.mjs`：同じ正常データから検索可能なHTMLとサイトマップを生成
 - `scripts/check_static.mjs`：公開ファイルとデータの確認
 - `tests/`：順位・試算・障害時保持・共有カウンターのテスト
 - `backend/`：エール累計の永続化API。Pagesとは別に配置します
@@ -134,3 +136,28 @@ Workerのビルド（`wrangler deploy --dry-run`）は成功しています。Cl
 参考：
 - [GitHub Pagesの公開元設定](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 - [ワークフローの手動実行](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow)
+
+
+## 検索への掲載とSEO
+
+タイトル・説明文は佐藤輝明、三冠王（3冠王）、2026年、打率・本塁打・打点というページの主題を示します。主要な成績、暫定順位、ライバル、最新出場、更新日時は`index.html`そのものに含めています。JavaScriptの有無やUser-Agentで別の情報を見せる構成ではありません。読み込み後の画面も同じ`data.json`を参照します。
+
+自動更新は取得と履歴保存の後に`node scripts/build_seo.mjs`を実行し、HTMLとJSONの一致を確認してから公開します。初回のJSON取得に失敗した場合も公開時点の成績が残ります。HTMLは`<!-- seo:名前:start -->`から対応する`end`までが生成対象です。それ以外の文言・レイアウトは直接編集できます。所有権確認タグは`head`内の生成範囲外に追加すると維持されます。
+
+サイトマップ：<https://yorunagi-lab.github.io/sato-triple-crown/sitemap.xml>。正規ページ1件のみを掲載し、検索に不要なJSONやクエリ付きURLは含めません。変更していない成績に新しい更新日を付けないよう、任意項目の`lastmod`は省略しています。
+
+検索掲載・順位の向上は保証されません。Googleでの登録状態・検索語・掲載順位はSearch Consoleの所有権確認後に確認できます。サイトマップの配置だけではSearch Consoleへの送信は完了しません。
+
+### Search Consoleの初回設定（所有者の操作が必要）
+
+1. <https://search.google.com/search-console/welcome> に自分のGoogleアカウントでログインします。
+2. **URLプレフィックス**に `https://yorunagi-lab.github.io/sato-triple-crown/` を末尾の `/` まで入力します。GitHubの共有ドメインなので「ドメイン」方式のDNS確認は選びません。
+3. 「その他の確認方法」から **HTMLタグ**を開き、Googleが発行する `<meta name="google-site-verification" ...>` をコピーします。
+4. そのタグをこのサイトの`head`内・SEO生成範囲外に追加して公開し、Search Consoleで「確認」を押します。確認後もタグを削除しません。
+5. 「サイトマップ」に `sitemap.xml` を送信し、トップページの「URL検査」で公開URLをテストして「インデックス登録をリクエスト」します。結果はSearch Consoleで確認します。
+
+本プロジェクトはサブディレクトリで公開しています。robots.txtはホスト直下の`https://yorunagi-lab.github.io/robots.txt`に置く必要があるため、プロジェクト内に無効なrobots.txtを作って完了扱いにはしていません。確認時はホスト直下が404で、クロール拒否のルールはありません。将来ホスト側でrobots.txtを追加する場合はこのページやJS・CSSを拒否しないことを確認してください。
+
+運用の目安は、まず登録・取得エラーの解消、次にSearch Consoleに実際に出た検索語に合わせた説明改善です。所有権確認トークンは未受領で、Search Consoleへの登録・サイトマップ送信・インデックス登録リクエストはまだ行っていません。
+
+参考：[JavaScript SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics?hl=ja)、[サイトマップ](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=ja)、[所有権確認](https://support.google.com/webmasters/answer/9008080?hl=ja)、[robots.txtの配置](https://developers.google.com/crawling/docs/robots-txt/create-robots-txt?hl=ja)。

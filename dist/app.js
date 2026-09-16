@@ -245,8 +245,11 @@ async function load({ quiet = false } = {}) {
     }
   } catch (error) {
     const banner = $('#status-message'); banner.hidden = false; banner.classList.add('error');
-    banner.textContent = state.data ? '再読込に失敗しました。画面には前回読み込んだ成績を残しています。' : '成績を読み込めませんでした。通信状態を確認して「データ再読込」を押してください。';
-    if (!state.data) $('#data-time').textContent = 'データ読込エラー';
+    const published = Boolean($('#metrics .metric-card'));
+    banner.textContent = state.data ? '再読込に失敗しました。画面には前回読み込んだ成績を残しています。'
+      : published ? '最新データを取得できませんでした。公開時点の成績を表示しています。「更新を確認」で再試行できます。'
+      : '成績を読み込めませんでした。通信状態を確認して「更新を確認」を押してください。';
+    if (!state.data && !published) $('#data-time').textContent = 'データ読込エラー';
     console.error('Snapshot loading failed', error);
   } finally { state.busy = false; $('#refresh-button').disabled = false; }
 }

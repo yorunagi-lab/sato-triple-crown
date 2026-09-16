@@ -60,10 +60,12 @@ jobs:
       - name: Save data and update status
         run: |
           python scripts/record_history.py
-          if ! git diff --quiet -- dist/data.json dist/fetch-status.json dist/history.json; then
+          node scripts/build_seo.mjs
+          node scripts/check_static.mjs
+          if ! git diff --quiet -- dist/data.json dist/fetch-status.json dist/history.json dist/index.html dist/sitemap.xml; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add dist/data.json dist/fetch-status.json dist/history.json
+            git add dist/data.json dist/fetch-status.json dist/history.json dist/index.html dist/sitemap.xml
             git commit -m 'data: refresh Sato triple crown snapshot'
             git push origin HEAD:main
           fi
