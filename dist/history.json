@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "season": 2026,
+  "started_at": "2026-09-17T01:26:37+09:00",
+  "days": [
+    {
+      "date": "2026-09-17",
+      "recorded_at": "2026-09-17T01:26:37+09:00",
+      "source_updated_at": "2026-09-16T22:28:05+09:00",
+      "data_through": "2026-09-15",
+      "values": {
+        "avg": 0.31512605042016806,
+        "hr": 35,
+        "rbi": 92
+      },
+      "races": {
+        "avg": {
+          "margin": 0.020009277596388875,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 0.2951167728237792
+        },
+        "hr": {
+          "margin": 2.0,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 33.0
+        },
+        "rbi": {
+          "margin": 15.0,
+          "rank": 1,
+          "rival_id": "1561820",
+          "rival_name": "ダルベック",
+          "rival_value": 77.0
+        }
+      }
+    }
+  ]
+}

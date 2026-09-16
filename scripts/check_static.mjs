@@ -9,7 +9,7 @@ for (const match of html.matchAll(/(?:src|href)="(\.\/[^"?#]+)(?:[^\"]*)"/g)) {
   const file = path.resolve(dist, match[1]);
   if (!file.startsWith(dist + path.sep) || !fs.existsSync(file)) throw new Error(`Missing local asset: ${match[1]}`);
 }
-for (const file of ['app.js', 'logic.js', 'cheer.js', 'effects.js', 'baseball-scenes.js']) execFileSync(process.execPath, ['--check', path.join(dist, file)]);
+for (const file of fs.readdirSync(dist).filter(file => file.endsWith('.js'))) execFileSync(process.execPath, ['--check', path.join(dist, file)]);
 const cheerConfig = JSON.parse(fs.readFileSync(path.join(dist, 'cheer-config.json'), 'utf8'));
 if (cheerConfig.endpoint !== null) {
   const endpoint = new URL(cheerConfig.endpoint);
@@ -19,6 +19,9 @@ const css = fs.readFileSync(path.join(dist, 'style.css'), 'utf8');
 if (css.includes("@import url('')")) throw new Error('Empty CSS import');
 const { validateSnapshot, projectScenario } = await import('../dist/logic.js');
 const data = validateSnapshot(JSON.parse(fs.readFileSync(path.join(dist, 'data.json'), 'utf8')));
+const { validateHistory, gameTrend } = await import('../dist/insight-data.js');
+validateHistory(JSON.parse(fs.readFileSync(path.join(dist, 'history.json'), 'utf8')), data.season);
+gameTrend(data);
 for (const mode of ['frozen', 'season']) projectScenario(data, 60, mode);
 if (html.includes('TODO') || html.includes('Lorem ipsum')) throw new Error('Placeholder content');
 console.log(`Static entrypoints, JavaScript and real snapshot validated: ${data.leading_categories}/3 categories; through ${data.data_through}`);

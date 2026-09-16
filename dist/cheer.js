@@ -1,4 +1,5 @@
-import { spawnCheerGorilla } from './effects.js?v=8';
+import { spawnCheerGorilla } from './effects.js?v=9';
+import { nextCombo, comboLevel } from './insight-data.js?v=9';
 
 const STORAGE_KEY = 'sato-cheers-local-v1';
 const $ = selector => document.querySelector(selector);
@@ -23,6 +24,31 @@ export function initCheers() {
   // Visual feedback never waits for storage, the network or another animation.
   let waitingForConfig = 0, queue = [], sending = false, flushTimer = null, unconfirmed = false;
   let streak = 0, lastTap = 0;
+  let comboTimer = null, best = 0;
+  const bestKey = 'sato-cheer-best-v1';
+  try { const saved = Number(localStorage.getItem(bestKey)); if (Number.isSafeInteger(saved) && saved > 0) best = saved; } catch { /* Session best remains available. */ }
+  $('#combo-best').textContent = `BEST ${number(best)}`;
+
+  function updateCombo(now) {
+    streak = nextCombo(streak, lastTap, now); lastTap = now;
+    const level = comboLevel(streak);
+    if (streak > best) {
+      best = streak;
+      try { localStorage.setItem(bestKey, String(best)); } catch { /* Preserve the current session. */ }
+    }
+    $('#combo-count').textContent = number(streak); $('#combo-best').textContent = `BEST ${number(best)}`;
+    $('#combo-panel').classList.toggle('is-gold', level.gold);
+    $('#combo-panel').classList.add('is-active');
+    $('#combo-progress').style.width = `${Math.min(100, streak / level.next * 100)}%`;
+    $('#combo-hint').textContent = streak >= 30 ? `GOLD MODE · 次は${level.next}連打へ！` : streak >= 10 ? 'コンボ成立！30連打で金のゴリラへ。' : `あと${10 - streak}連打でコンボ成立！`;
+    clearTimeout(comboTimer);
+    comboTimer = setTimeout(() => {
+      $('#combo-panel').classList.remove('is-active', 'is-gold');
+      $('#combo-hint').textContent = `${number(streak)}連打！次のタップで新しいコンボを開始。`;
+      $('#combo-progress').style.width = '0%';
+    }, 1500);
+    return level;
+  }
 
   function setSharedCount(count) {
     // Read responses may arrive after a newer POST. A public counter only increases.
@@ -94,10 +120,9 @@ export function initCheers() {
     } else if (mode === 'loading') waitingForConfig += count;
   }
   button.addEventListener('click', () => {
-    spawnCheerGorilla();
     const now = performance.now();
-    streak = now - lastTap < 1500 ? streak + 1 : 1;
-    lastTap = now;
+    const level = updateCombo(now);
+    spawnCheerGorilla(level);
     register();
     const cheer = streak > 1 ? `${number(streak)}連打。ゴリラも応援中。` : messages[(Math.max(1, localCount) - 1) % messages.length];
     message.textContent = mode === 'loading' ? '回数の保存先を確認しています…' : mode === 'unavailable' ? '演出だけを再生しています。回数の記録は再読込後にお試しください。' : mode === 'shared' ? `${cheer} 集計中…` : cheer;

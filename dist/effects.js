@@ -1,7 +1,14 @@
 import { baseballScene, animateBaseballScene } from './baseball-scenes.js?v=8';
+import { effectsEnabled, onEffectsChange } from './preferences.js?v=9';
 
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let serial = 0, mascotTemplate = null, metricTimer = null, stopMetricMotion = () => {};
+onEffectsChange(enabled => {
+  if (enabled) return;
+  clearTimeout(metricTimer); stopMetricMotion();
+  document.querySelector('#cheer-overlay')?.replaceChildren();
+  document.querySelector('#metric-effects')?.replaceChildren();
+});
 const mascotReady = fetch('./gorilla.svg?v=8', { signal: AbortSignal.timeout(5000) })
   .then(r => { if (!r.ok) throw new Error('Mascot unavailable'); return r.text(); })
   .then(text => {
@@ -26,7 +33,8 @@ function addMascot(node, id) {
   node.querySelector('.cheer-mascot').replaceChildren(clone);
 }
 
-export function spawnCheerGorilla() {
+export function spawnCheerGorilla({ gold = false, milestone = false } = {}) {
+  if (!effectsEnabled()) return;
   const layer = document.querySelector('#cheer-overlay');
   if (!layer) return;
   const reduced = reducedMotion();
@@ -34,7 +42,7 @@ export function spawnCheerGorilla() {
   const cap = reduced ? 18 : 72;
   while (layer.childElementCount >= cap) layer.firstElementChild.remove();
   const pop = document.createElement('div'), id = ++serial;
-  pop.className = `cheer-pop${reduced ? ' is-reduced' : ''}`;
+  pop.className = `cheer-pop${reduced ? ' is-reduced' : ''}${gold ? ' is-gold' : ''}${milestone ? ' is-milestone' : ''}`;
   const viewport = window.visualViewport;
   const width = viewport?.width || innerWidth, height = viewport?.height || innerHeight;
   const size = Math.min(width * .46, 120 + Math.random() * 90);
@@ -45,11 +53,13 @@ export function spawnCheerGorilla() {
   pop.style.setProperty('--drum-speed', `${.25 + Math.random() * .13}s`);
   pop.innerHTML = '<div class="cheer-mascot"><img src="./gorilla.svg?v=8" alt=""></div><span class="pop-word">DON!</span><i class="pop-spark spark-one"></i><i class="pop-spark spark-two"></i><i class="pop-spark spark-three"></i>';
   layer.append(pop);
+  pop.querySelector('.pop-word').textContent = milestone ? (gold ? 'GOLD!' : 'COMBO!') : 'DON!';
   if (mascotTemplate) addMascot(pop, id); else mascotReady.then(() => addMascot(pop, id));
   setTimeout(() => pop.remove(), reduced ? 1200 : 4800);
 }
 
 export function playMetricAnimation(metric) {
+  if (!effectsEnabled()) return;
   if (!['avg', 'hr', 'rbi'].includes(metric)) return;
   const layer = document.querySelector('#metric-effects');
   if (!layer) return;

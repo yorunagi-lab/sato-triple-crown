@@ -1,6 +1,9 @@
 import { METRICS, formatAverage, formatMetric, validateSnapshot, projectScenario, freshness } from './logic.js';
-import { initCheers } from './cheer.js?v=8';
-import { playMetricAnimation } from './effects.js?v=8';
+import { initCheers } from './cheer.js?v=9';
+import { playMetricAnimation } from './effects.js?v=9';
+import { initPreferences, effectsEnabled } from './preferences.js?v=9';
+import { renderLatest, renderHistory } from './insights.js?v=9';
+import { initSharing, updateShareData } from './sharing.js?v=9';
 
 const $ = selector => document.querySelector(selector);
 const state = { data: null, status: null, mode: 'season', additionalAB: null, busy: false, selectedMetric: 'avg' };
@@ -35,7 +38,7 @@ function renderMetrics(data) {
     card.dataset.metric = metric;
     const select = el('button', 'metric-select');
     select.type = 'button';
-    select.setAttribute('aria-label', `${config.label}を選択してゴリラの演出を再生`);
+    select.setAttribute('aria-label', `${config.label}を選択${effectsEnabled() ? 'してゴリラの演出を再生' : ''}`);
     select.setAttribute('aria-pressed', String(state.selectedMetric === metric));
     select.addEventListener('click', () => {
       state.selectedMetric = metric;
@@ -216,6 +219,7 @@ function render(data) {
   state.data = data;
   $('#data-time').textContent = `佐藤の最新出場 ${dateLabel(data.data_through, false)} · 最終取得 ${dateLabel(data.fetched_at)} JST`;
   renderMetrics(data); renderBoards(data); setupScenario(data); renderForm(data); renderMethodology(data); renderStatus();
+  renderLatest(data); updateShareData(data);
 }
 
 async function fetchJSON(file) {
@@ -228,12 +232,14 @@ async function load({ quiet = false } = {}) {
   if (state.busy) return;
   state.busy = true; $('#refresh-button').disabled = true;
   try {
-    const [dataResult, statusResult] = await Promise.allSettled([fetchJSON('./data.json'), fetchJSON('./fetch-status.json')]);
+    const [dataResult, statusResult, historyResult] = await Promise.allSettled([fetchJSON('./data.json'), fetchJSON('./fetch-status.json'), fetchJSON('./history.json')]);
     if (dataResult.status !== 'fulfilled') throw dataResult.reason;
     const data = validateSnapshot(dataResult.value);
     state.status = statusResult.status === 'fulfilled' ? statusResult.value : null;
     if (!quiet || !state.data || data.fetched_at !== state.data.fetched_at) render(data);
     else renderStatus();
+    if (historyResult.status === 'fulfilled') state.history = historyResult.value;
+    renderHistory(data, state.history, historyResult.status !== 'fulfilled');
     if (statusResult.status !== 'fulfilled') {
       const banner = $('#status-message'); banner.textContent += ' 取得状態の確認ができません。成績の更新日時を確認してください。'; banner.hidden = false;
     }
@@ -246,7 +252,7 @@ async function load({ quiet = false } = {}) {
 }
 
 $('#refresh-button').addEventListener('click', () => load());
-initCheers();
+initPreferences(); initSharing(); initCheers();
 setInterval(() => { if (!document.hidden) load({ quiet: true }); }, 5 * 60 * 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load({ quiet: true }); });
 

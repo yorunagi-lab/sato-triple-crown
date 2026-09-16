@@ -59,10 +59,11 @@ jobs:
         run: python scripts/update_data.py --mode scheduled
       - name: Save data and update status
         run: |
-          if ! git diff --quiet -- dist/data.json dist/fetch-status.json; then
+          python scripts/record_history.py
+          if ! git diff --quiet -- dist/data.json dist/fetch-status.json dist/history.json; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add dist/data.json dist/fetch-status.json
+            git add dist/data.json dist/fetch-status.json dist/history.json
             git commit -m 'data: refresh Sato triple crown snapshot'
             git push origin HEAD:main
           fi
