@@ -1,8 +1,13 @@
 import { METRICS, formatAverage, formatMetric, validateSnapshot, projectScenario, freshness } from './logic.js';
-import { initCheers } from './cheer.js';
+import { initCheers } from './cheer.js?v=2';
+import { playMetricAnimation } from './effects.js?v=2';
 
 const $ = selector => document.querySelector(selector);
-const state = { data: null, status: null, mode: 'season', additionalAB: null, busy: false };
+const state = { data: null, status: null, mode: 'season', additionalAB: null, busy: false, selectedMetric: 'avg' };
+try {
+  const saved = sessionStorage.getItem('sato-selected-metric');
+  if (Object.hasOwn(METRICS, saved)) state.selectedMetric = saved;
+} catch { /* Selection still works when browser storage is unavailable. */ }
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -26,7 +31,22 @@ function renderMetrics(data) {
   for (const [metric, config] of Object.entries(METRICS)) {
     const race = races[metric];
     const rival = data.contenders[metric].find(p => p.id === race.best_other_id);
-    const card = el('article', `metric-card${race.is_leading ? ' is-leading' : ''}`);
+    const card = el('article', `metric-card${race.is_leading ? ' is-leading' : ''}${state.selectedMetric === metric ? ' is-selected' : ''}`);
+    card.dataset.metric = metric;
+    const select = el('button', 'metric-select');
+    select.type = 'button';
+    select.setAttribute('aria-label', `${config.label}を選択してゴリラの演出を再生`);
+    select.setAttribute('aria-pressed', String(state.selectedMetric === metric));
+    select.addEventListener('click', () => {
+      state.selectedMetric = metric;
+      try { sessionStorage.setItem('sato-selected-metric', metric); } catch { /* Optional persistence. */ }
+      for (const item of root.querySelectorAll('.metric-card')) {
+        const selected = item.dataset.metric === metric;
+        item.classList.toggle('is-selected', selected);
+        item.querySelector('.metric-select').setAttribute('aria-pressed', String(selected));
+      }
+      playMetricAnimation(metric);
+    });
     card.dataset.index = `0${Object.keys(METRICS).indexOf(metric) + 1} / 03`;
     const title = append(el('h2'), document.createTextNode(config.label), el('small', '', config.english));
     let rankText = race.rank === null ? '規定未到達' : `${race.rank}位`;
@@ -43,7 +63,7 @@ function renderMetrics(data) {
     card.append(gap, el('p', 'metric-detail', `${rival.name}［${rival.team}］ ${formatMetric(metric, rival.value)}${config.unit}`));
     const ratio = race.rank ? Math.min(100, player[metric] / Math.max(player[metric], rival.value, 0.001) * 100) : 0;
     const track = el('div', 'metric-track'); track.setAttribute('aria-hidden', 'true');
-    const fill = el('span'); fill.style.width = `${ratio}%`; track.append(fill); card.append(track); root.append(card);
+    const fill = el('span'); fill.style.width = `${ratio}%`; track.append(fill); card.append(track, select); root.append(card);
   }
   let strip = $('#season-strip');
   if (!strip) { strip = el('div', 'season-strip'); strip.id = 'season-strip'; root.after(strip); }

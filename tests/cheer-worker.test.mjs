@@ -24,6 +24,9 @@ function setup() {
 const post = (id = randomUUID(), client = randomUUID()) => new Request('https://counter/api/cheers', {
   method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Cheer-Client': client }, body: JSON.stringify({ eventId: id }),
 });
+const batchPost = (ids, client = 'rapid-tapper') => new Request('https://counter/api/cheers', {
+  method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Cheer-Client': client }, body: JSON.stringify({ eventIds: ids }),
+});
 
 test('50 overlapping visitors produce exactly 50 cheers', async () => {
   const { counter, db } = setup();
@@ -52,11 +55,37 @@ test('failed write rolls back the receipt and permits a safe retry', async () =>
   storage.failUpdate = false;
   assert.equal((await (await counter.fetch(post(id))).json()).total, 1); db.close();
 });
-test('rapid new events are rejected without counting; receipt retries still succeed', async () => {
+test('rapid taps count normally; only excessive bursts are rejected, and retries still succeed', async () => {
   const { counter, db } = setup(); const id = randomUUID(), client = 'same-client';
   await counter.fetch(post(id, client));
+  for (let i = 1; i < 200; i++) assert.equal((await counter.fetch(post(randomUUID(), client))).status, 200);
   assert.equal((await counter.fetch(post(randomUUID(), client))).status, 429);
   assert.equal((await counter.fetch(post(id, client))).status, 200);
+  assert.equal(counter.total(), 200); db.close();
+});
+test('overlapping rapid-tap batches count every distinct tap once', async () => {
+  const { counter, db } = setup(); const ids = Array.from({ length: 60 }, () => randomUUID());
+  const responses = await Promise.all([counter.fetch(batchPost(ids.slice(0, 40))), counter.fetch(batchPost(ids.slice(20)))]);
+  assert.ok(responses.every(r => r.status === 200));
+  assert.equal(counter.total(), 60);
+  const retry = await (await counter.fetch(batchPost(ids.slice(0, 40)))).json();
+  assert.equal(retry.accepted, 0); assert.equal(retry.total, 60); db.close();
+});
+test('a failed batched update rolls back every receipt and can safely be retried', async () => {
+  const { counter, storage, db } = setup(); const ids = Array.from({ length: 30 }, () => randomUUID());
+  storage.failUpdate = true;
+  await assert.rejects(counter.fetch(batchPost(ids)), /storage failure/);
+  assert.equal(counter.total(), 0);
+  storage.failUpdate = false;
+  const result = await (await counter.fetch(batchPost(ids))).json();
+  assert.equal(result.accepted, 30); assert.equal(counter.total(), 30); db.close();
+});
+test('duplicate IDs within a batch are one tap; invalid or oversized batches do not add anything', async () => {
+  const { counter, db } = setup(); const id = randomUUID();
+  assert.equal((await (await counter.fetch(batchPost([id, id.toUpperCase(), id]))).json()).accepted, 1);
+  for (const ids of [[], [id, 'bad'], Array.from({ length: 41 }, () => randomUUID())]) {
+    assert.equal((await counter.fetch(batchPost(ids))).status, 400);
+  }
   assert.equal(counter.total(), 1); db.close();
 });
 test('invalid IDs, arrays and extra count fields cannot manipulate totals', async () => {
@@ -75,7 +104,7 @@ test('HTTP boundary enforces origin and format and preserves the persistent tota
   }), env);
   assert.equal((await send('https://other.invalid', JSON.stringify({ eventId: randomUUID() }))).status, 403);
   assert.equal((await send(env.ALLOWED_ORIGIN, '{}', 'text/plain')).status, 415);
-  assert.equal((await send(env.ALLOWED_ORIGIN, 'x'.repeat(129))).status, 413);
+  assert.equal((await send(env.ALLOWED_ORIGIN, 'x'.repeat(2049))).status, 413);
   const ok = await send(env.ALLOWED_ORIGIN, JSON.stringify({ eventId: randomUUID() }));
   assert.equal(ok.headers.get('Access-Control-Allow-Origin'), env.ALLOWED_ORIGIN);
   assert.equal((await ok.json()).total, 1);

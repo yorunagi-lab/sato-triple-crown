@@ -7,8 +7,9 @@
   <meta name="description" content="佐藤輝明、三冠王への道。打率・本塁打・打点の現在地と、三つの頂点への距離を追う非公式ファンサイト。">
   <title>佐藤輝明｜三冠王への道</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5cf60'/%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='24' font-weight='900' text-anchor='middle' fill='%23121411'%3E8%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.js"></script>
+  <link rel="stylesheet" href="./style.css?v=2">
+  <link rel="stylesheet" href="./effects.css?v=2">
+  <script type="module" src="./app.js?v=2"></script>
 </head>
 <body>
   <a class="skip-link" href="#metrics">成績へ移動</a>
@@ -33,14 +34,15 @@
       <div class="cheer-copy"><p class="eyebrow">04 / MAKE SOME NOISE</p><h2 id="cheer-heading">その一打に、<br>エールを。</h2><p class="cheer-description">三つの頂点へ。<br>あなたの一押しが、応援の力になる。</p>
         <div class="cheer-count"><span id="cheer-count-label">あなたのエール</span><strong id="cheer-total">0</strong><small id="cheer-count-note">この端末で押した回数</small></div>
         <button id="cheer-button" type="button"><span>エールを送る</span><span class="cheer-button-icon" aria-hidden="true">↗</span></button>
-        <p id="cheer-message" role="status" aria-live="polite">押すとゴリラがドラミング。</p>
+        <p id="cheer-message" role="status" aria-live="polite">連打でゴリラがどんどん登場。</p>
         <p class="cheer-disclaimer">ファン同士の応援演出です。選手への直接送信ではありません。</p>
       </div>
     </section>
     <section class="notes"><details><summary>データ・順位・試算について <span aria-hidden="true">＋</span></summary><div id="methodology"></div></details></section>
     <noscript><p class="notice">成績の表示にはJavaScriptを有効にしてください。</p></noscript>
   </main>
-  <div class="cheer-overlay" id="cheer-overlay" aria-hidden="true" hidden><div class="cheer-burst"></div><div class="cheer-confetti" id="cheer-confetti"></div><div class="gorilla-stage" id="gorilla-stage"></div><div class="cheer-shout"><span>LET'S GO, TERU!</span><strong>届け、このエール。</strong></div><span class="drum-word drum-word-one">DON!</span><span class="drum-word drum-word-two">DON!</span></div>
+  <div class="cheer-overlay" id="cheer-overlay" aria-hidden="true"></div>
+  <div class="metric-effects" id="metric-effects" aria-hidden="true"></div>
   <footer><a class="footer-brand" href="#top">SATO <b>8</b><span>THE TRIPLE CROWN CHASE</span></a><div><p>非公式ファンサイト。球団・選手・NPB・データ提供元とは関係ありません。</p><p>成績データ：<a href="https://baseballdata.jp/" target="_blank" rel="noopener noreferrer">baseballdata.jp</a> · <a href="./data.json" target="_blank" rel="noopener">取得データ</a></p><p class="footer-credit">FOR THE LOVE OF THE GAME. / 2026</p></div></footer>
 </body>
 </html>

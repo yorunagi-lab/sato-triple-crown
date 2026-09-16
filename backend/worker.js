@@ -19,28 +19,33 @@ export class CheerCounter {
     if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405);
     let body;
     try { body = await request.json(); } catch { return json({ error: 'invalid_json' }, 400); }
-    if (typeof body?.eventId !== 'string' || !UUID.test(body.eventId) || Object.keys(body).length !== 1) return json({ error: 'invalid_event' }, 400);
-    const eventId = body.eventId.toLowerCase();
+    const ids = body?.eventIds ?? (body?.eventId ? [body.eventId] : null);
+    if (!Array.isArray(ids) || ids.length < 1 || ids.length > 40 || Object.keys(body).length !== 1 ||
+      !ids.every(id => typeof id === 'string' && UUID.test(id))) return json({ error: 'invalid_event' }, 400);
+    const eventIds = [...new Set(ids.map(id => id.toLowerCase()))];
     const now = Date.now();
-    const receipt = this.sql.exec('SELECT id FROM receipts WHERE id = ?', eventId).toArray()[0];
-    if (receipt) return json({ total: this.total(), duplicate: true });
+    const newIds = eventIds.filter(id => !this.sql.exec('SELECT id FROM receipts WHERE id = ?', id).toArray().length);
+    if (!newIds.length) return json({ total: this.total(), accepted: 0, duplicate: true });
     // Ephemeral, day-specific hash. No raw IP or user identifier is written to storage.
     const client = request.headers.get('X-Cheer-Client') || 'anonymous';
-    const previous = this.rate.get(client) || 0;
-    if (now - previous < 1000) return json({ error: 'rate_limited' }, 429, { 'Retry-After': '1' });
+    let window = this.rate.get(client);
+    if (!window || now - window.start >= 10000) window = { start: now, count: 0 };
+    // Normal rapid tapping is supported; reject only an excessive event burst.
+    if (window.count + newIds.length > 200) return json({ error: 'rate_limited' }, 429,
+      { 'Retry-After': String(Math.max(1, Math.ceil((window.start + 10000 - now) / 1000))) });
     const result = this.storage.transactionSync(() => {
       // Both writes succeed together, or neither does. Retries reuse the receipt.
-      this.sql.exec('INSERT INTO receipts (id, created) VALUES (?, ?)', eventId, now);
-      this.sql.exec('UPDATE totals SET total = total + 1 WHERE id = 1');
+      for (const id of newIds) this.sql.exec('INSERT INTO receipts (id, created) VALUES (?, ?)', id, now);
+      this.sql.exec('UPDATE totals SET total = total + ? WHERE id = 1', newIds.length);
       return this.total();
     });
-    this.rate.set(client, now);
+    this.rate.set(client, { start: window.start, count: window.count + newIds.length });
     if (now - this.lastCleanup > 3600000) {
       this.sql.exec('DELETE FROM receipts WHERE created < ?', now - 86400000);
-      for (const [key, time] of this.rate) if (now - time > 60000) this.rate.delete(key);
+      for (const [key, value] of this.rate) if (now - value.start > 60000) this.rate.delete(key);
       this.lastCleanup = now;
     }
-    return json({ total: result, duplicate: false });
+    return json({ total: result, accepted: newIds.length, duplicate: false });
   }
 }
 
@@ -60,7 +65,7 @@ export default {
       if (!(request.headers.get('Content-Type') || '').startsWith('application/json')) return json({ error: 'json_required' }, 415, headers);
       // Reading via text also checks actual size when Content-Length is absent.
       const text = await request.text();
-      if (text.length > 128) return json({ error: 'body_too_large' }, 413, headers);
+      if (text.length > 2048) return json({ error: 'body_too_large' }, 413, headers);
       const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
       const day = new Date().toISOString().slice(0, 10);
       const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${day}:${ip}`));

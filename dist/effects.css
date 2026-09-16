@@ -1,0 +1,96 @@
+.metric-card{transition:background .2s,color .2s,border-color .2s,transform .2s}
+.metric-select{position:absolute;inset:0;z-index:2;width:100%;height:100%;padding:0;border:0;background:transparent;border-radius:0;touch-action:manipulation}
+.metric-select:focus-visible{outline:3px solid var(--text);outline-offset:-7px}
+.metric-card.is-selected .metric-select:focus-visible{outline-color:#22291c}
+.metric-select::after{content:'↗';position:absolute;right:12px;top:7px;font:14px Arial;opacity:.4}
+#cheer-button{touch-action:manipulation;user-select:none;-webkit-user-select:none}
+/* Independent decorations: no dialog, backdrop, body lock or pointer interception. */
+.cheer-overlay,.metric-effects{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:80}
+.cheer-overlay *,.metric-effects *{pointer-events:none!important}
+.metric-effects{z-index:75;display:grid;place-items:center}
+.cheer-pop{position:absolute;aspect-ratio:1;animation:cheer-pop-life 4.8s both;will-change:transform,opacity}
+.cheer-mascot{transform:rotate(var(--lean))}
+.cheer-mascot svg,.cheer-mascot img{display:block;width:100%;height:auto;overflow:visible}
+.cheer-pop .gorilla-shadow{opacity:.08}
+.cheer-pop .gorilla-body{transform-origin:160px 280px;animation:cheer-body-beat var(--drum-speed) .25s infinite}
+.cheer-pop .gorilla-head{transform-origin:160px 155px;animation:cheer-head-beat var(--drum-speed) .25s infinite}
+.cheer-pop .gorilla-arm-left{transform-origin:95px 157px;animation:cheer-drum-left var(--drum-speed) .25s infinite}
+.cheer-pop .gorilla-arm-right{transform-origin:225px 157px;animation:cheer-drum-right var(--drum-speed) .25s infinite}
+.cheer-pop .gorilla-impact{opacity:0;animation:cheer-impact .16s .3s infinite}
+.pop-word{position:absolute;top:9%;left:-3%;color:#ffe27e;font:900 italic clamp(20px,4vw,30px)/1 Arial;transform:rotate(-15deg);text-shadow:2px 2px #172011;animation:cheer-word .36s .3s infinite alternate}
+.pop-spark{position:absolute;top:25%;left:20%;width:6px;height:12px;background:#f5cf60;animation:pop-spark 1s .15s 3 both}
+.spark-two{left:80%;top:35%;rotate:35deg;animation-delay:.3s;background:#fff3cf}
+.spark-three{left:52%;top:10%;rotate:-30deg;animation-delay:.5s}
+.cheer-pop.is-reduced{animation:none;will-change:auto}.is-reduced .gorilla-body,.is-reduced .gorilla-head,.is-reduced .gorilla-arm-left,.is-reduced .gorilla-arm-right,.is-reduced .pop-word{animation:none}.is-reduced .pop-spark,.is-reduced .gorilla-impact{display:none}
+@keyframes cheer-pop-life{0%{opacity:0;transform:translateY(95px) scale(.5)}8%{opacity:1;transform:translateY(-9px) scale(1.06)}15%,75%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(.8)}}
+@keyframes cheer-body-beat{50%{transform:translateY(4px) scale(1.02,.985)}}
+@keyframes cheer-head-beat{50%{transform:rotate(-3deg) translateY(3px)}}
+@keyframes cheer-drum-left{0%,100%{transform:rotate(-13deg) translate(-7px,-8px)}45%{transform:rotate(11deg) translate(8px,1px)}}
+@keyframes cheer-drum-right{0%,100%{transform:rotate(-10deg) translate(-8px,1px)}45%{transform:rotate(14deg) translate(7px,-8px)}}
+@keyframes cheer-impact{0%,65%,100%{opacity:0}35%{opacity:1}}
+@keyframes cheer-word{from{scale:.85}to{scale:1.07}}
+@keyframes pop-spark{from{opacity:1;translate:0 0}to{opacity:0;translate:15px -55px;rotate:130deg}}
+
+.metric-film{width:min(94vw,600px);background:#152016f7;border:1px solid #c9b862;border-radius:9px;box-shadow:0 20px 65px #0007;overflow:hidden;animation:film-life 4.3s both}
+.film-avg{animation-duration:3.9s}
+.film-heading{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;font:10px/1.2 Arial;letter-spacing:2px;color:#e3d494;border-bottom:1px solid #62714a}
+.film-heading b{font-size:13px;color:#f5cf60;letter-spacing:1px}
+.film-screen{position:relative;aspect-ratio:560/375;overflow:hidden;background:radial-gradient(ellipse at 70% 30%,#415037,#142419 75%)}
+.camera-frame{position:absolute;inset:0;--start:0s}
+.baseball-scene{position:absolute;bottom:0;left:0;width:100%;height:auto;overflow:visible}
+.camera-label{position:absolute;left:18px;top:13px;z-index:1;font:10px/1.2 Arial,'Meiryo',sans-serif;letter-spacing:1.2px;color:#f0e8c7;background:#142017b0;padding:5px 7px;border-left:2px solid #f5cf60}
+.camera-progress{position:absolute;bottom:0;left:0;right:0;display:flex;gap:4px;padding:8px 12px}
+.camera-progress i{height:3px;flex:1;background:#4d5d3f;overflow:hidden}
+.camera-progress i::after{content:'';display:block;height:100%;background:#f5cf60;transform:scaleX(0);transform-origin:left;animation:camera-time 1.2s linear both}
+.camera-progress i:nth-child(2)::after{animation-delay:1.2s}.camera-progress i:nth-child(3)::after{animation-delay:2.4s}
+.camera-side{animation:camera-side 3.6s linear both}.camera-front{animation:camera-front 3.6s linear both}.camera-top{animation:camera-top 3.6s linear both}
+.bat-swing-side,.bat-swing-front,.bat-swing-top{transform-origin:0 0;animation:bat-side .98s calc(var(--start) + .1s) both}
+.bat-swing-front{animation-name:bat-front}.bat-swing-top{animation-name:bat-top}
+.batter-weight{transform-origin:183px 270px;animation:batter-weight .98s calc(var(--start) + .1s) both}
+.contact-flash{opacity:0;animation:bat-impact .25s calc(var(--start) + .5s) both}
+.hit-ball-side,.hit-ball-front,.hit-ball-top{animation:ball-side 1.12s calc(var(--start) + .03s) both}
+.hit-ball-front{animation-name:ball-front}.hit-ball-top{animation-name:ball-top}
+.hit-trail{opacity:0;animation:hit-trail .48s calc(var(--start) + .53s) both}
+.front-speed{opacity:0;animation:front-speed .45s calc(var(--start) + .55s) both}
+.hr-flight-path{stroke-dashoffset:370;opacity:0;animation:hr-trail 3.6s both}
+.hr-ball{animation:home-run-ball 3.6s both}
+.stand-impact{opacity:0;transform-origin:470px 94px;animation:stand-impact 3.6s both}
+.hr-hit-flash .contact-flash{animation-delay:.57s}
+.hr-result{opacity:0;animation:result-in .35s 2.7s both}
+.sliding-gorilla{animation:headfirst-slide 3.7s both}
+.slide-legs{transform-origin:80px 242px;animation:slide-kick .6s .1s 2}
+.slide-dust{opacity:0;transform-origin:170px 268px;animation:slide-dust 3.7s both}
+.slide-contact{opacity:0;animation:bat-impact .5s 1.75s both}
+.slide-safe{opacity:0;animation:result-in .3s 1.95s both}
+@keyframes film-life{0%{opacity:0;transform:translateY(80px) scale(.88)}8%,88%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-25px) scale(.97)}}
+@keyframes camera-side{0%,33.32%{opacity:1;visibility:visible}33.33%,100%{opacity:0;visibility:hidden}}
+@keyframes camera-front{0%,33.32%{opacity:0;visibility:hidden}33.33%,66.65%{opacity:1;visibility:visible}66.66%,100%{opacity:0;visibility:hidden}}
+@keyframes camera-top{0%,66.65%{opacity:0;visibility:hidden}66.66%,100%{opacity:1;visibility:visible}}
+@keyframes camera-time{to{transform:scaleX(1)}}
+@keyframes bat-side{0%,15%{transform:rotate(-55deg)}45%{transform:rotate(90deg)}72%,100%{transform:rotate(250deg)}}
+@keyframes bat-front{0%,15%{transform:rotate(-78deg)}45%{transform:rotate(21deg)}80%,100%{transform:rotate(255deg)}}
+@keyframes bat-top{0%,15%{transform:rotate(-68deg)}45%{transform:rotate(-4deg)}80%,100%{transform:rotate(61deg)}}
+@keyframes batter-weight{0%,15%{transform:rotate(-6deg)}55%,100%{transform:rotate(5deg)}}
+@keyframes bat-impact{0%,100%{opacity:0}20%,65%{opacity:1}}
+@keyframes ball-side{0%,10%{transform:translate(538px,182px);opacity:1}43%{transform:translate(280px,198px) scale(1)}92%,100%{transform:translate(580px,63px) scale(.6);opacity:0}}
+@keyframes ball-front{0%{transform:translate(276px,65px) scale(.45);opacity:1}43%{transform:translate(330px,192px) scale(1)}90%,100%{transform:translate(294px,271px) scale(11);opacity:0}}
+@keyframes ball-top{0%{transform:translate(280px,5px);opacity:1}43%{transform:translate(308px,231px)}94%,100%{transform:translate(481px,-15px) scale(.6);opacity:0}}
+@keyframes hit-trail{0%{opacity:1;stroke-dashoffset:260}80%{opacity:.7;stroke-dashoffset:0}100%{opacity:0;stroke-dashoffset:0}}
+@keyframes front-speed{0%{opacity:.9}100%{opacity:0}}
+@keyframes home-run-ball{0%{transform:translate(549px,175px) scale(1);opacity:1}16%{transform:translate(240px,197px) scale(1)}32%{transform:translate(316px,60px) scale(.88)}46%{transform:translate(378px,28px) scale(.7)}60%{transform:translate(434px,52px) scale(.55)}72%{transform:translate(470px,94px) scale(.42);opacity:1}74%,100%{transform:translate(470px,99px) scale(.3);opacity:0}}
+@keyframes hr-trail{0%,16%{opacity:0;stroke-dashoffset:370}17%{opacity:.9;stroke-dashoffset:370}72%{opacity:.7;stroke-dashoffset:0}88%,100%{opacity:0;stroke-dashoffset:0}}
+@keyframes stand-impact{0%,71%{opacity:0;transform:scale(.8)}76%,90%{opacity:1;transform:scale(1.1)}100%{opacity:1;transform:scale(1)}}
+@keyframes headfirst-slide{0%{transform:translate(-300px,-8px) rotate(-9deg)}25%{transform:translate(-10px,-14px) rotate(-3deg)}48%{transform:translate(120px,0) rotate(0)}60%,100%{transform:translate(141px,0) rotate(0)}}
+@keyframes slide-kick{50%{transform:rotate(13deg)}}
+@keyframes slide-dust{0%,25%{opacity:0;transform:translateX(-90px) scale(.5)}50%{opacity:.8;transform:translateX(80px) scale(1.1)}80%{opacity:.4;transform:translate(80px,-14px) scale(1.5)}100%{opacity:0;transform:translate(60px,-22px) scale(1.9)}}
+@keyframes result-in{from{opacity:0;translate:0 12px}to{opacity:1;translate:0 0}}
+.metric-film.is-reduced{animation:none}.metric-film.is-reduced *{animation:none!important}
+.metric-film.is-reduced .camera-side,.metric-film.is-reduced .camera-front{display:none}
+.metric-film.is-reduced .camera-top{opacity:1;visibility:visible}
+.metric-film.is-reduced .bat-swing-side{transform:rotate(90deg)}.metric-film.is-reduced .bat-swing-top{transform:rotate(-4deg)}
+.metric-film.is-reduced .hit-ball-top{transform:translate(308px,231px)}
+.metric-film.is-reduced .hr-ball{transform:translate(470px,94px)}
+.metric-film.is-reduced .hr-result,.metric-film.is-reduced .stand-impact,.metric-film.is-reduced .slide-safe{opacity:1}
+.metric-film.is-reduced .sliding-gorilla{transform:translate(141px,0)}
+@media(max-width:700px){.film-heading{padding:11px 13px;font-size:9px;letter-spacing:1.3px}.film-heading b{font-size:11px}.camera-label{font-size:9px;top:8px;left:10px;letter-spacing:.5px}.metric-select::after{font-size:12px;top:6px;right:8px}}
+@media(prefers-reduced-motion:reduce){.cheer-pop,.metric-film{animation:none;will-change:auto}}
