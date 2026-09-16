@@ -25,13 +25,17 @@
     </g>
     <g class="gorilla-arm gorilla-arm-left">
       <path d="M99 145C66 135 39 164 34 194C30 221 38 244 58 250C80 256 99 246 104 228L121 189Z" fill="url(#fur)" stroke="#171c16" stroke-width="5"/>
+      <g class="gorilla-forearm gorilla-forearm-left">
       <path d="M67 229C67 211 88 193 101 183L110 153C118 144 130 154 127 168L127 182C146 178 163 189 165 204C164 224 151 239 135 240L100 245C84 248 70 243 67 229Z" fill="#5d6655" stroke="#171c16" stroke-width="5"/>
       <path d="M132 195L144 204M123 205L135 214M113 215L126 224" stroke="#303b2b" stroke-width="4" stroke-linecap="round"/>
+      </g>
     </g>
     <g class="gorilla-arm gorilla-arm-right">
       <path d="M221 145C254 135 281 164 286 194C290 221 282 244 262 250C240 256 221 246 216 228L199 189Z" fill="url(#fur)" stroke="#171c16" stroke-width="5"/>
+      <g class="gorilla-forearm gorilla-forearm-right">
       <path d="M253 229C253 211 232 193 219 183L210 153C202 144 190 154 193 168L193 182C174 178 157 189 155 204C156 224 169 239 185 240L220 245C236 248 250 243 253 229Z" fill="#5d6655" stroke="#171c16" stroke-width="5"/>
       <path d="M188 195L176 204M197 205L185 214M207 215L194 224" stroke="#303b2b" stroke-width="4" stroke-linecap="round"/>
+      </g>
     </g>
     <g class="gorilla-impact" stroke="#fff2ad" stroke-width="5" stroke-linecap="round"><path d="M145 178L139 163M176 180L187 167M163 174V157"/></g>
   </g>

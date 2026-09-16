@@ -1,6 +1,6 @@
 import { METRICS, formatAverage, formatMetric, validateSnapshot, projectScenario, freshness } from './logic.js';
-import { initCheers } from './cheer.js?v=2';
-import { playMetricAnimation } from './effects.js?v=2';
+import { initCheers } from './cheer.js?v=3';
+import { playMetricAnimation } from './effects.js?v=3';
 
 const $ = selector => document.querySelector(selector);
 const state = { data: null, status: null, mode: 'season', additionalAB: null, busy: false, selectedMetric: 'avg' };

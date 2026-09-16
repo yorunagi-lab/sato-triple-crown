@@ -1,4 +1,4 @@
-import { spawnCheerGorilla } from './effects.js?v=2';
+import { spawnCheerGorilla } from './effects.js?v=3';
 
 const STORAGE_KEY = 'sato-cheers-local-v1';
 const $ = selector => document.querySelector(selector);
