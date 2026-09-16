@@ -1,4 +1,5 @@
 import { METRICS, formatAverage, formatMetric, validateSnapshot, projectScenario, freshness } from './logic.js';
+import { initCheers } from './cheer.js';
 
 const $ = selector => document.querySelector(selector);
 const state = { data: null, status: null, mode: 'season', additionalAB: null, busy: false };
@@ -26,6 +27,7 @@ function renderMetrics(data) {
     const race = races[metric];
     const rival = data.contenders[metric].find(p => p.id === race.best_other_id);
     const card = el('article', `metric-card${race.is_leading ? ' is-leading' : ''}`);
+    card.dataset.index = `0${Object.keys(METRICS).indexOf(metric) + 1} / 03`;
     const title = append(el('h2'), document.createTextNode(config.label), el('small', '', config.english));
     let rankText = race.rank === null ? '規定未到達' : `${race.rank}位`;
     if (race.tied) rankText = metric === 'avg' ? '同率首位' : '同数首位';
@@ -83,7 +85,7 @@ function renderBoards(data) {
 function setupScenario(data) {
   const root = $('#scenario-section'); root.replaceChildren();
   const heading = append(el('div', 'section-heading'),
-    append(el('div'), el('p', 'eyebrow', 'WHAT DOES IT TAKE?'), el('h2', '', '三冠をつかむ条件')),
+    append(el('div'), el('p', 'eyebrow', '02 / WHAT DOES IT TAKE?'), el('h2', '', '三冠をつかむ条件')),
     el('p', '', '条件を変えて試算'));
   heading.querySelector('h2').id = 'scenario-heading'; root.append(heading);
   const shell = el('div', 'scenario-shell');
@@ -145,7 +147,7 @@ function renderScenario() {
 function renderForm(data) {
   const root = $('#form-section'); root.replaceChildren();
   const grid = el('div', 'form-grid'); const left = el('div');
-  left.append(append(el('div', 'section-heading'), append(el('div'), el('p', 'eyebrow', 'RECENT FORM'), el('h2', '', '直近の一打、一打。'))));
+  left.append(append(el('div', 'section-heading'), append(el('div'), el('p', 'eyebrow', '03 / RECENT FORM'), el('h2', '', '直近の一打、一打。'))));
   const summary = el('div', 'form-summary');
   for (const [label, value, detail] of [
     ['直近5試合', formatAverage(data.recent.last5.avg), `${data.recent.last5.hits}安打 / ${data.recent.last5.ab}打数`],
@@ -178,7 +180,7 @@ function renderMethodology(data) {
     '規定打席は所属球団の消化試合数×3.1を四捨五入。143試合のシーズン規定打席は443です。規定未到達者も、不足打席を凡退扱いしてなお首位となる場合は特例計算の候補に含めます。正式なタイトルはNPBの発表で確認してください。',
     '試算は全競合選手を比較し、部門ごとに最も高い想定成績を採用します。追加安打数は単独首位に必要な最低値です。本塁打・打点・安打は別々の計算であり、三つの数字が同時に生じる打撃結果を予測するものではありません。打率の試算は規定打席到達を前提とします。',
     `定期更新を有効にした場合の目安：${data.schedule_jst.join(' / ')}（日本時間）。開始は遅れる場合があります。取得元の更新時刻にも依存します。画面は5分ごとに公開済みデータを再読込します。`,
-    '取得・整合性検証に失敗した場合は前回の正常データを表示します。取得元の更新から30時間以上経過した場合も注意を表示します。応援ボタンは端末内の演出で、送信・集計はありません。',
+    '取得・整合性検証に失敗した場合は前回の正常データを表示します。取得元の更新から30時間以上経過した場合も注意を表示します。応援回数は画面のラベルをご確認ください。「この端末」はブラウザ内の記録、「みんなのエール」は共有集計です。共有回数はサーバーが受け付けた分だけ増えます。通信結果が不明な場合は累計を再確認します。選手への直接送信ではありません。',
   ];
   for (const message of messages) root.append(el('p', '', message));
 }
@@ -224,13 +226,7 @@ async function load({ quiet = false } = {}) {
 }
 
 $('#refresh-button').addEventListener('click', () => load());
-const cheers = ['次の一打が、三つの頂点を近づける。', '佐藤輝明、その一振りを待っている。', '最後の一試合まで、三冠を追う。'];
-let cheerIndex = 0;
-$('#cheer-button').addEventListener('click', () => {
-  $('#cheer-message').textContent = cheers[cheerIndex++ % cheers.length];
-  const section = $('.cheer-section'); section.classList.remove('is-cheering');
-  requestAnimationFrame(() => section.classList.add('is-cheering'));
-});
+initCheers();
 setInterval(() => { if (!document.hidden) load({ quiet: true }); }, 5 * 60 * 1000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) load({ quiet: true }); });
 

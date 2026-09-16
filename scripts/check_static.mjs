@@ -9,7 +9,12 @@ for (const match of html.matchAll(/(?:src|href)="(\.\/[^"?#]+)(?:[^\"]*)"/g)) {
   const file = path.resolve(dist, match[1]);
   if (!file.startsWith(dist + path.sep) || !fs.existsSync(file)) throw new Error(`Missing local asset: ${match[1]}`);
 }
-for (const file of ['app.js', 'logic.js']) execFileSync(process.execPath, ['--check', path.join(dist, file)]);
+for (const file of ['app.js', 'logic.js', 'cheer.js']) execFileSync(process.execPath, ['--check', path.join(dist, file)]);
+const cheerConfig = JSON.parse(fs.readFileSync(path.join(dist, 'cheer-config.json'), 'utf8'));
+if (cheerConfig.endpoint !== null) {
+  const endpoint = new URL(cheerConfig.endpoint);
+  if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password) throw new Error('Cheer endpoint must use HTTPS');
+}
 const css = fs.readFileSync(path.join(dist, 'style.css'), 'utf8');
 if (css.includes("@import url('')")) throw new Error('Empty CSS import');
 const { validateSnapshot, projectScenario } = await import('../dist/logic.js');

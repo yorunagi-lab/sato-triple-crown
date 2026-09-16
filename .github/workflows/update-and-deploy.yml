@@ -7,6 +7,7 @@ on:
       - 'dist/**'
       - 'scripts/**'
       - 'tests/**'
+      - 'backend/worker.js'
       - '.github/workflows/**'
   workflow_dispatch:
   schedule:
@@ -50,7 +51,7 @@ jobs:
       - name: Verify calculations and failure handling
         run: |
           python -m unittest discover -s tests -v
-          node --test tests/logic.test.mjs
+          node --test tests/*.test.mjs
           node scripts/check_static.mjs
       - name: Fetch and validate current season
         id: stats

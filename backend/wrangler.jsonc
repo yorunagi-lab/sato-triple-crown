@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sato-cheers",
+  "main": "worker.js",
+  "compatibility_date": "2026-09-16",
+  "workers_dev": true,
+  "vars": { "ALLOWED_ORIGIN": "https://yorunagi-lab.github.io" },
+  "durable_objects": {
+    "bindings": [{ "name": "CHEERS", "class_name": "CheerCounter" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CheerCounter"] }],
+  "observability": { "enabled": false }
+}

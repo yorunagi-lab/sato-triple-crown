@@ -3,27 +3,44 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101114">
-  <meta name="description" content="佐藤輝明選手の打率・本塁打・打点、三冠王への現在地を追う非公式ダッシュボード。">
+  <meta name="theme-color" content="#121411">
+  <meta name="description" content="佐藤輝明、三冠王への道。打率・本塁打・打点の現在地と、三つの頂点への距離を追う非公式ファンサイト。">
   <title>佐藤輝明｜三冠王への道</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f7c941'/%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='24' font-weight='900' text-anchor='middle' fill='%23101114'%3E8%3C/text%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5cf60'/%3E%3Ctext x='16' y='24' font-family='sans-serif' font-size='24' font-weight='900' text-anchor='middle' fill='%23121411'%3E8%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body>
-  <header class="site-header"><a class="brand" href="#top"><b>SATO<span>8</span></b><span>TRIPLE CROWN</span></a><span class="season-label">2026 CENTRAL LEAGUE</span></header>
+  <a class="skip-link" href="#metrics">成績へ移動</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="佐藤輝明 三冠王への道 トップ"><b>8</b><span>SATO TERUAKI<small>THE TRIPLE CROWN CHASE</small></span></a>
+    <nav aria-label="ページ内メニュー"><a href="#race-heading">タイトル争い</a><a href="#scenario-section">三冠の試算</a><a class="nav-cheer" href="#cheer-section">エール <span aria-hidden="true">↗</span></a></nav>
+  </header>
   <main id="top">
-    <section class="hero"><div><p class="eyebrow">佐藤輝明 / 阪神タイガース</p><h1>三冠王への道<span>THE CHASE FOR THREE.</span></h1><p class="hero-note">打率、本塁打、打点。三つの頂点への現在地。</p></div><div class="crown-summary" id="crown-summary"><span>現在の首位部門</span><strong>—<small>/ 3</small></strong><span>データを確認しています</span></div></section>
-    <div class="data-bar"><span id="data-time">データを読み込んでいます</span><button id="refresh-button" type="button">データ再読込 <span aria-hidden="true">↻</span></button></div>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy"><p class="eyebrow"><span class="tiny-diamond" aria-hidden="true"></span> 2026 CENTRAL LEAGUE / NO.08</p><p class="hero-kicker">TERUAKI SATO · HANSHIN</p><h1 id="hero-title">佐藤輝明、<br><em>三冠王への道。</em></h1><p class="hero-note">打率、本塁打、打点。<br>三つの頂点を、その一振りで。</p><a class="hero-link" href="#metrics">三冠への現在地 <span aria-hidden="true">↓</span></a></div>
+      <div class="hero-art"><div class="hero-orbit" aria-hidden="true"><span class="orbit-label">ONE SWING. THREE TITLES.</span><span class="hero-eight">8</span><span class="orbit-year">EST. 2026</span></div><div class="crown-summary" id="crown-summary"><span>現在の首位部門</span><strong>—<small>/ 3</small></strong><span>データを確認しています</span></div></div>
+    </section>
+    <div class="section-divider" aria-hidden="true"><span>THE CHASE CONTINUES</span><span>AVG / HR / RBI</span></div>
+    <div class="data-bar"><span id="data-time">データを読み込んでいます</span><button id="refresh-button" type="button">更新を確認 <span aria-hidden="true">↻</span></button></div>
     <p id="status-message" class="notice" role="status" hidden></p>
     <section class="metrics" id="metrics" aria-label="三冠の現在地"></section>
-    <section class="race-section" aria-labelledby="race-heading"><div class="section-heading"><div><p class="eyebrow">TITLE RACE</p><h2 id="race-heading">ライバルとの距離</h2></div><p>同数・同率の首位を含みます</p></div><div class="leaderboards" id="leaderboards"></div></section>
+    <section class="race-section" aria-labelledby="race-heading"><div class="section-heading"><div><p class="eyebrow">01 / TITLE RACE</p><h2 id="race-heading">頂点までの、距離。</h2></div><p>同数・同率の首位を含む暫定順位</p></div><div class="leaderboards" id="leaderboards"></div></section>
     <section id="scenario-section" class="scenario-section" aria-labelledby="scenario-heading"></section>
     <section id="form-section" class="form-section" aria-label="直近の打撃とシーズン成績"></section>
-    <section class="cheer-section"><div><p class="eyebrow">ONE SWING CLOSER</p><h2>次の一打を、待つ。</h2></div><button id="cheer-button" type="button">佐藤輝明にエールを送る <span aria-hidden="true">↗</span></button><p id="cheer-message" aria-live="polite">この画面だけの応援演出です</p></section>
-    <section class="notes"><details><summary>データ・順位・試算について</summary><div id="methodology"></div></details></section>
+    <section class="cheer-section" id="cheer-section" aria-labelledby="cheer-heading">
+      <div class="cheer-art" aria-hidden="true"><span class="cheer-ring"></span><img src="./gorilla.svg" alt="" width="320" height="320"><span class="mascot-label">POWERED BY YOUR CHEERS</span></div>
+      <div class="cheer-copy"><p class="eyebrow">04 / MAKE SOME NOISE</p><h2 id="cheer-heading">その一打に、<br>エールを。</h2><p class="cheer-description">三つの頂点へ。<br>あなたの一押しが、応援の力になる。</p>
+        <div class="cheer-count"><span id="cheer-count-label">あなたのエール</span><strong id="cheer-total">0</strong><small id="cheer-count-note">この端末で押した回数</small></div>
+        <button id="cheer-button" type="button"><span>エールを送る</span><span class="cheer-button-icon" aria-hidden="true">↗</span></button>
+        <p id="cheer-message" role="status" aria-live="polite">押すとゴリラがドラミング。</p>
+        <p class="cheer-disclaimer">ファン同士の応援演出です。選手への直接送信ではありません。</p>
+      </div>
+    </section>
+    <section class="notes"><details><summary>データ・順位・試算について <span aria-hidden="true">＋</span></summary><div id="methodology"></div></details></section>
     <noscript><p class="notice">成績の表示にはJavaScriptを有効にしてください。</p></noscript>
   </main>
-  <footer><span class="footer-brand">SATO 8 / TRIPLE CROWN</span><p>非公式ファンサイト。球団・選手・NPB・データ提供元とは関係ありません。</p><p>成績データ：<a href="https://baseballdata.jp/" target="_blank" rel="noopener noreferrer">baseballdata.jp</a> · <a href="./data.json" target="_blank" rel="noopener">取得データ</a></p></footer>
+  <div class="cheer-overlay" id="cheer-overlay" aria-hidden="true" hidden><div class="cheer-burst"></div><div class="cheer-confetti" id="cheer-confetti"></div><div class="gorilla-stage" id="gorilla-stage"></div><div class="cheer-shout"><span>LET'S GO, TERU!</span><strong>届け、このエール。</strong></div><span class="drum-word drum-word-one">DON!</span><span class="drum-word drum-word-two">DON!</span></div>
+  <footer><a class="footer-brand" href="#top">SATO <b>8</b><span>THE TRIPLE CROWN CHASE</span></a><div><p>非公式ファンサイト。球団・選手・NPB・データ提供元とは関係ありません。</p><p>成績データ：<a href="https://baseballdata.jp/" target="_blank" rel="noopener noreferrer">baseballdata.jp</a> · <a href="./data.json" target="_blank" rel="noopener">取得データ</a></p><p class="footer-credit">FOR THE LOVE OF THE GAME. / 2026</p></div></footer>
 </body>
 </html>
