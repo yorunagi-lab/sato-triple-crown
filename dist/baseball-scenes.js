@@ -1,22 +1,16 @@
-// Original vector scenes: independent side, rear and overhead camera drawings.
+// Original vector scenes: independent side, behind-home-plate and overhead camera drawings.
 // All markup is static artwork, never interpolated from visitor input.
 const ink = '#141c13', fur = '#404d3b', skin = '#a6b399', gold = '#f5cf60';
 const ball = '<circle r="7" fill="#fffbea" stroke="#b4baa6" stroke-width="1.2"/><path d="M-3-6Q2 0-3 6M3-6Q-2 0 3 6" fill="none" stroke="#c36651" stroke-width="1"/>';
-const rearHead = `<ellipse cx="-44" cy="4" rx="10" ry="15" fill="#6e7e60" stroke="${ink}" stroke-width="4"/><ellipse cx="44" cy="4" rx="10" ry="15" fill="#6e7e60" stroke="${ink}" stroke-width="4"/>
-  <path d="M-39-24L-37-49L-20-39L-5-56L9-39L30-49L34-29Q52-6 38 25L24 44Q0 55-26 43L-40 23Q-51-4-39-24Z" fill="${fur}" stroke="${ink}" stroke-width="4"/>
-  <path d="M-25-31Q0-44 25-29L29 13Q20 35 0 39Q-25 29-29 10Z" fill="#56654a"/>
-  <path d="M-43-17Q0-3 43-17L42-3Q0 10-42-3Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>
-  <path d="M-4-5L-21 24L-7 20L0 28L7 1M5-5L24 17L30 11L18-9Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>
-  <path d="M-8-10Q0-17 9-9L7 2Q0 7-8 1Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
 const sideFace = `<path d="M-36-31L-29-51L-12-40L4-54L20-33Q37-21 36-2L52 8L53 28Q41 47 7 44Q-36 46-43 15Q-53-14-36-31Z" fill="${fur}" stroke="${ink}" stroke-width="4"/>
   <path d="M8-12Q31-19 34-1L49 8L47 28Q33 43 9 33L-2 16Z" fill="${skin}" stroke="${ink}" stroke-width="3"/><ellipse cx="-25" cy="5" rx="12" ry="17" fill="#829075" stroke="${ink}" stroke-width="4"/>
   <path d="M9-9L30-5" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><circle cx="25" cy="3" r="4" fill="${ink}"/><path d="M35 9L47 12L43 20H34Z" fill="${ink}"/><path d="M22 28L41 28" stroke="${ink}" stroke-width="3"/>
   <path d="M-44-29Q-10-40 34-22L33-9Q-13-25-42-15Z" fill="${gold}" stroke="${ink}" stroke-width="3"/><path d="M-42-22L-62-35L-56-11L-71 0L-41-10Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
 const svg = (body, cls = '') => `<svg class="baseball-scene ${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 340" fill="none">${body}</svg>`;
 const field = `<g class="scene-scenery"><path d="M245 252L0 328M245 252L560 328" stroke="#e5e2c8" stroke-width="2"/><path d="M230 252L249 246L269 252L265 263L246 270L229 263Z" fill="#f0ecd8"/></g>`;
-function battingRig(view) {
+function battingRig(view, torso = '') {
   const arm = name => `<g data-arm="${name}"><path class="arm-outline"/><path class="arm-upper"/><path class="arm-forearm"/></g>`;
-  return `<g class="batting-rig" data-view="${view}">${arm('back')}${arm('front')}<path class="held-bat"/><path class="bat-grip"/><g class="bat-hands"><g data-hand="back"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g><g data-hand="front"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g></g></g>`;
+  return `<g class="batting-rig" data-view="${view}">${arm('back')}${torso}${arm('front')}<path class="held-bat"/><path class="bat-grip"/><g class="bat-hands"><g data-hand="back"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g><g data-hand="front"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g></g></g>`;
 }
 function sideBatter() {
   return `<g class="batter-side">
@@ -35,19 +29,28 @@ function contact(x, y, cls = '') {
 function sideHit() {
   return svg(`${field}${sideBatter()}<path class="hit-trail" d="M324 172L540 98" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(324,172)}<g class="hit-ball-side">${ball}</g>`);
 }
-function rearHit() {
-  // Arms and bat sit beyond the back: the torso occludes them as the swing
-  // crosses the body, instead of showing forearms through the shoulder blades.
-  return svg(`<g class="scene-scenery"><path d="M141 249L-60 10M141 249L429 10" stroke="#ede7c9" stroke-width="2"/><path d="M125 236H157L162 252L141 265L120 252Z" fill="#f3efd7"/></g>
-    <g class="rear-batter"><path d="M213 226L194 296Q209 309 235 301L258 254L286 298Q309 307 336 296L307 222Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
-    <path d="M197 286L230 290M294 287L329 284" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
-    ${battingRig('rear')}
-    <path d="M202 131Q176 139 184 174L201 226Q211 253 261 258Q302 255 319 229L337 174Q340 139 307 129Q257 111 202 131Z" fill="${fur}" stroke="${ink}" stroke-width="5"/>
-    <path d="M204 148Q226 130 254 151L250 184Q226 175 205 179ZM266 151Q293 130 316 147L313 178Q291 173 270 184Z" fill="#58694c"/>
-    <path d="M260 151V183M205 218Q213 243 235 247M313 217Q305 242 282 248" stroke="#2f3e29" stroke-width="4" stroke-linecap="round"/>
-    <text x="260" y="239" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="51">8</text>
-    <g class="rear-head" transform="translate(260 106) scale(.96)">${rearHead}</g></g>
-    <path class="rear-speed" d="M141 193L119 106M133 193L89 113" stroke="${gold}" stroke-width="2"/>${contact(141,197)}<g class="hit-ball-rear">${ball}</g>`);
+function plateHit() {
+  // Camera is behind home plate, looking out toward the mound. A left-handed
+  // hitter occupies screen-right, turned inward across the plate, not back-on.
+  const torso = `<g class="plate-torso"><path d="M374 126Q402 119 418 145Q434 174 417 216Q389 241 356 212Q343 181 354 151Z" fill="${fur}" stroke="${ink}" stroke-width="5"/>
+    <path d="M371 142Q348 162 358 197L376 216Q386 184 381 157Z" fill="#8b9c7b"/>
+    <path d="M402 141Q419 163 411 190" stroke="#58694c" stroke-width="8" stroke-linecap="round"/>
+    <text x="394" y="218" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="31" transform="rotate(9 394 218)">8</text></g>`;
+  return svg(`<g class="scene-scenery plate-field">
+    <path d="M280 308L24 136M280 308L536 136M106 191L280 80L454 191" stroke="#e5e2c8" stroke-width="2.5"/>
+    <path d="M68 116Q280 13 492 116" stroke="#a3b27f" stroke-width="2"/>
+    <path d="M100 187L107 182L115 188L107 194ZM273 80L280 76L287 80L280 85ZM445 188L453 182L460 187L453 194Z" fill="#f3efd7"/>
+    <ellipse class="pitcher-mound" cx="280" cy="141" rx="34" ry="12" fill="#ba9e67" fill-opacity=".24" stroke="#cdb17b" stroke-width="2"/><path d="M270 138H290" stroke="#f3efd7" stroke-width="4"/>
+    <path class="batter-box" d="M250 224H122L80 314H250ZM310 224H438L480 314H310Z" stroke="#ede7c9" stroke-width="2"/>
+    <path d="M145 319Q280 353 415 319" stroke="#a3b27f" stroke-width="2"/>
+    <path class="home-plate" d="M263 285H297V298L280 310L263 298Z" fill="#fff5d9" stroke="#c5bea3" stroke-width="1.5"/>
+    </g>
+    <g class="plate-batter"><ellipse cx="391" cy="300" rx="70" ry="9" fill="#879370" opacity=".16"/>
+    <path d="M359 208L345 256L325 270L325 281L362 281L385 229L406 270L426 294L459 294L457 283L434 259L414 211Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
+    <path d="M328 275H355M432 288H454" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
+    ${battingRig('plate', torso)}
+    <g class="plate-head" transform="translate(385 116) rotate(16) scale(-.8 .8)">${sideFace}</g></g>
+    <path class="plate-speed" d="M278 209L231 113M286 207L266 108" stroke="${gold}" stroke-width="2"/>${contact(280,212)}<g class="hit-ball-plate">${ball}</g>`, 'behind-plate-scene');
 }
 function topHit() {
   return svg(`<g class="scene-scenery"><path d="M280 26L519 214L280 340L41 214Z" stroke="#c1bb89" stroke-width="2"/><path d="M280 295L29 105M280 295L531 105" stroke="#f3eccc" stroke-width="2"/><path d="M268 286H292V299L280 309L268 299Z" fill="#fff2d4"/></g>
@@ -99,7 +102,7 @@ function sliding() {
 }
 
 export function baseballScene(metric) {
-  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-rear" style="--start:1.2s"><span class="camera-label">02 / REAR — 真後ろ</span>${rearHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
+  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-plate" style="--start:1.2s"><span class="camera-label">02 / BACKSTOP — ホーム後方</span>${plateHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
   if (metric === 'hr') return `<div class="camera-frame"><span class="camera-label">FULL SWING → STAND IN</span>${homeRun()}</div>`;
   return `<div class="camera-frame"><span class="camera-label">HEADFIRST SLIDE → HOME</span>${sliding()}</div>`;
 }
@@ -111,9 +114,9 @@ const poses = {
     arms: [{ shoulder: [153, 151], upper: 52, lower: 50, bend: 1 }, { shoulder: [201, 148], upper: 46, lower: 45, bend: -1 }],
     keys: [[0, 174, 157, 128, 42], [.22, 181, 160, 168, 50], [.46, 226, 181, 335, 170], [.70, 224, 165, 252, 88], [1, 211, 161, 98, 117]],
   },
-  rear: {
-    arms: [{ shoulder: [316, 158], upper: 64, lower: 64, bend: -1 }, { shoulder: [210, 156], upper: 62, lower: 62, bend: 1 }],
-    keys: [[0, 205, 182, 158, 85], [.22, 210, 191, 113, 145], [.46, 254, 208, 132, 196], [.70, 281, 200, 272, 157], [1, 309, 181, 393, 91]],
+  plate: {
+    arms: [{ shoulder: [407, 157], upper: 56, lower: 58, bend: -1 }, { shoulder: [369, 158], upper: 50, lower: 52, bend: 1 }],
+    keys: [[0, 407, 155, 460, 68], [.22, 410, 170, 494, 102], [.46, 355, 203, 268, 214], [.70, 345, 183, 330, 98], [1, 377, 145, 459, 111]],
   },
   top: {
     arms: [{ shoulder: [181, 229], upper: 54, lower: 53, bend: 1 }, { shoulder: [240, 223], upper: 50, lower: 50, bend: -1 }],
