@@ -2,8 +2,8 @@
   "schema_version": 1,
   "season": 2026,
   "season_games": 143,
-  "fetched_at": "2026-09-16T22:21:21+09:00",
-  "source_updated_at": "2026-09-16T03:48:46+09:00",
+  "fetched_at": "2026-09-16T22:53:16+09:00",
+  "source_updated_at": "2026-09-16T06:13:59+09:00",
   "data_through": "2026-09-15",
   "mode": "scheduled",
   "source": {
@@ -18,11 +18,11 @@
       "recent": "https://baseballdata.jp/playerB/2000051S.html"
     },
     "page_updated_at": {
-      "average": "2026-09-16T03:49:19+09:00",
-      "home_runs": "2026-09-16T03:49:20+09:00",
-      "rbi": "2026-09-16T03:49:20+09:00",
-      "nonqualified": "2026-09-16T03:49:19+09:00",
-      "standings": "2026-09-16T03:48:46+09:00",
+      "average": "2026-09-16T22:28:20+09:00",
+      "home_runs": "2026-09-16T22:28:21+09:00",
+      "rbi": "2026-09-16T22:28:21+09:00",
+      "nonqualified": "2026-09-16T22:28:21+09:00",
+      "standings": "2026-09-16T22:28:05+09:00",
       "player": null,
       "recent": "2026-09-16T06:13:59+09:00"
     }
