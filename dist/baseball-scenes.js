@@ -7,7 +7,14 @@ const sideFace = `<path d="M-36-31L-29-51L-12-40L4-54L20-33Q37-21 36-2L52 8L53 2
   <path d="M9-9L30-5" stroke="${ink}" stroke-width="7" stroke-linecap="round"/><circle cx="25" cy="3" r="4" fill="${ink}"/><path d="M35 9L47 12L43 20H34Z" fill="${ink}"/><path d="M22 28L41 28" stroke="${ink}" stroke-width="3"/>
   <path d="M-44-29Q-10-40 34-22L33-9Q-13-25-42-15Z" fill="${gold}" stroke="${ink}" stroke-width="3"/><path d="M-42-22L-62-35L-56-11L-71 0L-41-10Z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
 const svg = (body, cls = '') => `<svg class="baseball-scene ${cls}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 340" fill="none">${body}</svg>`;
-const field = `<g class="scene-scenery"><path d="M245 252L0 328M245 252L560 328" stroke="#e5e2c8" stroke-width="2"/><path d="M230 252L249 246L269 252L265 263L246 270L229 263Z" fill="#f0ecd8"/></g>`;
+// Side camera from the third-base side: the left-handed batter stands beyond
+// the plate. The plate point faces screen-left (catcher), pitcher is screen-right.
+const field = `<g class="scene-scenery side-field">
+  <path d="M232 311L560 219M232 311L560 339" stroke="#e5e2c8" stroke-width="2"/>
+  <path class="side-batter-box" d="M121 264H313L341 298H134Z" stroke="#ede7c9" stroke-width="2"/>
+  <path class="side-home-plate" d="M232 311L249 301H274V321H249Z" fill="#fff5d9" stroke="#c5bea3" stroke-width="1.5"/>
+  <path d="M421 258L535 238" stroke="#adba90" stroke-width="2"/>
+</g>`;
 function battingRig(view, torso = '') {
   const arm = name => `<g data-arm="${name}"><path class="arm-outline"/><path class="arm-upper"/><path class="arm-forearm"/></g>`;
   return `<g class="batting-rig" data-view="${view}">${arm('back')}${torso}${arm('front')}<path class="held-bat"/><path class="bat-grip"/><g class="bat-hands"><g data-hand="back"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g><g data-hand="front"><ellipse rx="11" ry="10"/><path d="M-5-3H5M-5 2H5"/></g></g></g>`;
@@ -27,7 +34,7 @@ function contact(x, y, cls = '') {
   return `<g class="contact-flash ${cls}" transform="translate(${x} ${y})"><path d="M0-33L7-11L26-23L16-4L40 3L15 11L24 33L4 19L-11 36L-12 13L-35 16L-20 0L-33-19L-10-12Z" fill="${gold}"/><circle r="12" fill="#fffde4"/></g>`;
 }
 function sideHit() {
-  return svg(`${field}${sideBatter()}<path class="hit-trail" d="M324 172L540 98" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(324,172)}<g class="hit-ball-side">${ball}</g>`);
+  return svg(`${field}<g class="avg-side-batter" transform="translate(34 -4)">${sideBatter()}</g><path class="hit-trail" d="M358 168L540 98" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(358,168)}<g class="hit-ball-side">${ball}</g>`);
 }
 function plateHit() {
   // Eye-level camera in the umpire's slot, immediately behind the catcher.
@@ -43,7 +50,7 @@ function plateHit() {
     <path d="M8 206Q268 187 552 206" stroke="#b2b995" stroke-width="2"/>
     <path d="M280 310L-20 224M280 310L580 224" stroke="#e5e2c8" stroke-width="2.5"/>
     <ellipse class="pitcher-mound" cx="268" cy="190" rx="31" ry="5" fill="#ba9e67" fill-opacity=".3" stroke="#cdb17b" stroke-width="2"/><path d="M261 187H275" stroke="#f3efd7" stroke-width="3"/>
-    <path class="batter-box" d="M317 275L355 275L551 339M318 275L325 339M244 275L202 275L24 339M244 275L237 339" stroke="#ede7c9" stroke-width="2"/>
+    <path class="batter-box" d="M318 276H446L530 331H320ZM242 276H114L30 331H240Z" stroke="#ede7c9" stroke-width="2"/>
     <path class="home-plate" d="M263 294H297L307 304L280 317L254 304Z" fill="#fff5d9" stroke="#c5bea3" stroke-width="1.5"/>
     </g>
     <g class="distant-pitcher" fill="#7f9073" stroke="${ink}" stroke-width="1.7" stroke-linejoin="round">
@@ -56,8 +63,8 @@ function plateHit() {
       <ellipse cx="293" cy="148" rx="6" ry="7" fill="#a1814c"/>
     </g>
     <g class="plate-batter" transform="translate(-92 -42) scale(1.3)">
-      <path d="M359 208L345 256L325 270L325 281L362 281L385 229L406 270L426 294L459 294L457 283L434 259L414 211Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
-      <path d="M328 275H355M432 288H454" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
+      <path class="plate-legs" d="M359 208L350 249L332 262V274H366L386 232L403 260L421 282H452V273L429 250L414 211Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
+      <path d="M336 269H361M425 277H448" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
       ${battingRig('plate', torso)}
       <g class="plate-head" transform="translate(385 116) rotate(16) scale(-.8 .8)">${sideFace}</g>
     </g>
@@ -76,11 +83,11 @@ function plateHit() {
     </g>`, 'umpire-scene');
 }
 function topHit() {
-  return svg(`<g class="scene-scenery"><path d="M280 26L519 214L280 340L41 214Z" stroke="#c1bb89" stroke-width="2"/><path d="M280 295L29 105M280 295L531 105" stroke="#f3eccc" stroke-width="2"/><path d="M268 286H292V299L280 309L268 299Z" fill="#fff2d4"/></g>
+  return svg(`<g class="top-left-handed" transform="translate(560 0) scale(-1 1)"><g class="scene-scenery"><path d="M280 26L519 214L280 340L41 214Z" stroke="#c1bb89" stroke-width="2"/><path d="M280 295L29 105M280 295L531 105" stroke="#f3eccc" stroke-width="2"/><path d="M268 286H292V299L280 309L268 299Z" fill="#fff2d4"/></g>
     <g class="top-batter"><g transform="translate(213 240)"><path d="M-40-4L-53 43L-31 50L-9 14L21 45L43 33L32-14Z" fill="#34402d" stroke="${ink}" stroke-width="5"/><ellipse cy="-13" rx="49" ry="54" fill="${fur}" stroke="${ink}" stroke-width="5"/>
     <text x="0" y="20" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="27">8</text></g>${battingRig('top')}
     <g transform="translate(213 240)"><path d="M-41-48Q0-70 36-47L31-24Q0-35-35-21Z" fill="#56654a" stroke="${ink}" stroke-width="4"/><path d="M-33-41Q0-54 34-42L32-33Q0-43-31-31Z" fill="${gold}"/></g></g>
-    <path class="hit-trail" d="M359 221L449 32" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(359,221)}<g class="hit-ball-top">${ball}</g>`);
+    <path class="hit-trail" d="M359 221L449 32" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(359,221)}<g class="hit-ball-top">${ball}</g></g>`);
 }
 function stadium() {
   let seats = '';
