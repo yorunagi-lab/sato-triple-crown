@@ -1,4 +1,4 @@
-// Original vector scenes: independent side, behind-home-plate and overhead camera drawings.
+// Original vector scenes: side, umpire eye-level and overhead cameras.
 // All markup is static artwork, never interpolated from visitor input.
 const ink = '#141c13', fur = '#404d3b', skin = '#a6b399', gold = '#f5cf60';
 const ball = '<circle r="7" fill="#fffbea" stroke="#b4baa6" stroke-width="1.2"/><path d="M-3-6Q2 0-3 6M3-6Q-2 0 3 6" fill="none" stroke="#c36651" stroke-width="1"/>';
@@ -30,27 +30,50 @@ function sideHit() {
   return svg(`${field}${sideBatter()}<path class="hit-trail" d="M324 172L540 98" stroke="${gold}" stroke-width="3" stroke-dasharray="260"/>${contact(324,172)}<g class="hit-ball-side">${ball}</g>`);
 }
 function plateHit() {
-  // Camera is behind home plate, looking out toward the mound. A left-handed
-  // hitter occupies screen-right, turned inward across the plate, not back-on.
+  // Eye-level camera in the umpire's slot, immediately behind the catcher.
+  // Shallow field perspective, a small distant pitcher and cropped foreground
+  // catcher establish depth; the nearby left-handed batter fills screen-right.
   const torso = `<g class="plate-torso"><path d="M374 126Q402 119 418 145Q434 174 417 216Q389 241 356 212Q343 181 354 151Z" fill="${fur}" stroke="${ink}" stroke-width="5"/>
     <path d="M371 142Q348 162 358 197L376 216Q386 184 381 157Z" fill="#8b9c7b"/>
     <path d="M402 141Q419 163 411 190" stroke="#58694c" stroke-width="8" stroke-linecap="round"/>
     <text x="394" y="218" text-anchor="middle" fill="${gold}" font-family="Arial" font-weight="900" font-size="31" transform="rotate(9 394 218)">8</text></g>`;
   return svg(`<g class="scene-scenery plate-field">
-    <path d="M280 308L24 136M280 308L536 136M106 191L280 80L454 191" stroke="#e5e2c8" stroke-width="2.5"/>
-    <path d="M68 116Q280 13 492 116" stroke="#a3b27f" stroke-width="2"/>
-    <path d="M100 187L107 182L115 188L107 194ZM273 80L280 76L287 80L280 85ZM445 188L453 182L460 187L453 194Z" fill="#f3efd7"/>
-    <ellipse class="pitcher-mound" cx="280" cy="141" rx="34" ry="12" fill="#ba9e67" fill-opacity=".24" stroke="#cdb17b" stroke-width="2"/><path d="M270 138H290" stroke="#f3efd7" stroke-width="4"/>
-    <path class="batter-box" d="M250 224H122L80 314H250ZM310 224H438L480 314H310Z" stroke="#ede7c9" stroke-width="2"/>
-    <path d="M145 319Q280 353 415 319" stroke="#a3b27f" stroke-width="2"/>
-    <path class="home-plate" d="M263 285H297V298L280 310L263 298Z" fill="#fff5d9" stroke="#c5bea3" stroke-width="1.5"/>
+    <path class="field-horizon" d="M12 151Q280 141 548 151M12 169Q280 156 548 169" stroke="#9aaa7a" stroke-width="2"/>
+    <path d="M22 151V168M87 149V165M150 147V162M214 145V160M345 145V160M410 147V162M474 149V165M538 151V168" stroke="#7e8d64" stroke-width="1.5"/>
+    <path d="M8 206Q268 187 552 206" stroke="#b2b995" stroke-width="2"/>
+    <path d="M280 310L-20 224M280 310L580 224" stroke="#e5e2c8" stroke-width="2.5"/>
+    <ellipse class="pitcher-mound" cx="268" cy="190" rx="31" ry="5" fill="#ba9e67" fill-opacity=".3" stroke="#cdb17b" stroke-width="2"/><path d="M261 187H275" stroke="#f3efd7" stroke-width="3"/>
+    <path class="batter-box" d="M317 275L355 275L551 339M318 275L325 339M244 275L202 275L24 339M244 275L237 339" stroke="#ede7c9" stroke-width="2"/>
+    <path class="home-plate" d="M263 294H297L307 304L280 317L254 304Z" fill="#fff5d9" stroke="#c5bea3" stroke-width="1.5"/>
     </g>
-    <g class="plate-batter"><ellipse cx="391" cy="300" rx="70" ry="9" fill="#879370" opacity=".16"/>
-    <path d="M359 208L345 256L325 270L325 281L362 281L385 229L406 270L426 294L459 294L457 283L434 259L414 211Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
-    <path d="M328 275H355M432 288H454" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
-    ${battingRig('plate', torso)}
-    <g class="plate-head" transform="translate(385 116) rotate(16) scale(-.8 .8)">${sideFace}</g></g>
-    <path class="plate-speed" d="M278 209L231 113M286 207L266 108" stroke="${gold}" stroke-width="2"/>${contact(280,212)}<g class="hit-ball-plate">${ball}</g>`, 'behind-plate-scene');
+    <g class="distant-pitcher" fill="#7f9073" stroke="${ink}" stroke-width="1.7" stroke-linejoin="round">
+      <path d="M270 151L263 175L253 186L263 188L278 169L290 186H300L296 180L285 152Z"/>
+      <path d="M270 127Q279 122 287 131L291 156Q275 162 267 153Z" fill="#b8c0ab"/>
+      <path d="M275 131L264 142L256 143L257 149L269 147L281 135Z"/>
+      <path d="M285 131L300 143L295 151L287 147L278 138Z"/>
+      <ellipse cx="278" cy="118" rx="9" ry="10" fill="#a6b399"/>
+      <path d="M267 115Q270 103 282 108L287 115Z" fill="#687e50"/><path d="M266 115H288" stroke="#d8bd68" stroke-width="3"/>
+      <ellipse cx="293" cy="148" rx="6" ry="7" fill="#a1814c"/>
+    </g>
+    <g class="plate-batter" transform="translate(-92 -42) scale(1.3)">
+      <path d="M359 208L345 256L325 270L325 281L362 281L385 229L406 270L426 294L459 294L457 283L434 259L414 211Z" fill="#34402d" stroke="${ink}" stroke-width="5"/>
+      <path d="M328 275H355M432 288H454" stroke="#627354" stroke-width="5" stroke-linecap="round"/>
+      ${battingRig('plate', torso)}
+      <g class="plate-head" transform="translate(385 116) rotate(16) scale(-.8 .8)">${sideFace}</g>
+    </g>
+    <path class="plate-speed" d="M270 230L237 179M279 229L266 176" stroke="${gold}" stroke-width="2"/>
+    ${contact(272,234)}<g class="hit-ball-plate">${ball}</g>
+    <g class="catcher-foreground">
+      <path d="M111 340Q147 320 180 321H236Q271 325 309 340" fill="#344231" stroke="#718164" stroke-width="3"/>
+      <path d="M240 329L260 299L282 278" fill="none" stroke="#52644a" stroke-width="19" stroke-linecap="round"/>
+      <g class="catcher-mitt" transform="translate(284 271) rotate(-15)">
+        <path d="M-16 10Q-28-3-19-18Q-14-25-8-16Q-5-29 2-21Q10-26 15-16Q26-14 24-2L14 17Q0 24-16 10Z" fill="#b18b4c" stroke="#3d3624" stroke-width="3"/>
+        <path d="M-11-8Q0-15 13-6L8 10Q-3 16-11-8Z" fill="#5f5135"/><path d="M-18-12L-12-8M-7-20L-5-12M4-21L5-13M15-15L11-9M19-1L13 0" stroke="#e0c184" stroke-width="2"/>
+      </g>
+      <path class="catcher-helmet" d="M151 340L152 318Q155 285 208 284Q256 286 264 320L267 340Z" fill="#344332" stroke="#87967a" stroke-width="3"/>
+      <path d="M203 286Q192 310 194 340M216 286Q230 311 227 340" stroke="#596d4d" stroke-width="8"/>
+      <path d="M156 322Q207 309 260 324M158 331Q207 322 264 333" stroke="#202c20" stroke-width="6"/>
+    </g>`, 'umpire-scene');
 }
 function topHit() {
   return svg(`<g class="scene-scenery"><path d="M280 26L519 214L280 340L41 214Z" stroke="#c1bb89" stroke-width="2"/><path d="M280 295L29 105M280 295L531 105" stroke="#f3eccc" stroke-width="2"/><path d="M268 286H292V299L280 309L268 299Z" fill="#fff2d4"/></g>
@@ -102,7 +125,7 @@ function sliding() {
 }
 
 export function baseballScene(metric) {
-  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-plate" style="--start:1.2s"><span class="camera-label">02 / BACKSTOP — ホーム後方</span>${plateHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
+  if (metric === 'avg') return `<div class="camera-frame camera-side" style="--start:0s"><span class="camera-label">01 / SIDE — インパクト</span>${sideHit()}</div><div class="camera-frame camera-plate" style="--start:1.2s"><span class="camera-label">02 / UMPIRE POV — 球審の目線</span>${plateHit()}</div><div class="camera-frame camera-top" style="--start:2.4s"><span class="camera-label">03 / TOP — 真上</span>${topHit()}</div><div class="camera-progress"><i></i><i></i><i></i></div>`;
   if (metric === 'hr') return `<div class="camera-frame"><span class="camera-label">FULL SWING → STAND IN</span>${homeRun()}</div>`;
   return `<div class="camera-frame"><span class="camera-label">HEADFIRST SLIDE → HOME</span>${sliding()}</div>`;
 }

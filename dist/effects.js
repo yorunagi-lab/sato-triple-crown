@@ -1,8 +1,8 @@
-import { baseballScene, animateBaseballScene } from './baseball-scenes.js?v=5';
+import { baseballScene, animateBaseballScene } from './baseball-scenes.js?v=6';
 
 const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let serial = 0, mascotTemplate = null, metricTimer = null, stopMetricMotion = () => {};
-const mascotReady = fetch('./gorilla.svg?v=5', { signal: AbortSignal.timeout(5000) })
+const mascotReady = fetch('./gorilla.svg?v=6', { signal: AbortSignal.timeout(5000) })
   .then(r => { if (!r.ok) throw new Error('Mascot unavailable'); return r.text(); })
   .then(text => {
     const root = new DOMParser().parseFromString(text, 'image/svg+xml').documentElement;
@@ -43,7 +43,7 @@ export function spawnCheerGorilla() {
   pop.style.top = `${Math.random() * Math.max(0, height - size - 38) + 18}px`;
   pop.style.setProperty('--lean', `${Math.random() * 20 - 10}deg`);
   pop.style.setProperty('--drum-speed', `${.25 + Math.random() * .13}s`);
-  pop.innerHTML = '<div class="cheer-mascot"><img src="./gorilla.svg?v=5" alt=""></div><span class="pop-word">DON!</span><i class="pop-spark spark-one"></i><i class="pop-spark spark-two"></i><i class="pop-spark spark-three"></i>';
+  pop.innerHTML = '<div class="cheer-mascot"><img src="./gorilla.svg?v=6" alt=""></div><span class="pop-word">DON!</span><i class="pop-spark spark-one"></i><i class="pop-spark spark-two"></i><i class="pop-spark spark-three"></i>';
   layer.append(pop);
   if (mascotTemplate) addMascot(pop, id); else mascotReady.then(() => addMascot(pop, id));
   setTimeout(() => pop.remove(), reduced ? 1200 : 4800);
