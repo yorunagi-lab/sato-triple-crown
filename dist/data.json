@@ -2,8 +2,8 @@
   "schema_version": 1,
   "season": 2026,
   "season_games": 143,
-  "fetched_at": "2026-09-22T06:19:13+09:00",
-  "source_updated_at": "2026-09-22T03:33:35+09:00",
+  "fetched_at": "2026-09-22T17:26:48+09:00",
+  "source_updated_at": "2026-09-22T06:13:28+09:00",
   "data_through": "2026-09-21",
   "mode": "scheduled",
   "source": {
@@ -24,7 +24,7 @@
       "nonqualified": "2026-09-22T06:14:22+09:00",
       "standings": "2026-09-22T06:13:28+09:00",
       "player": null,
-      "recent": "2026-09-22T03:33:35+09:00"
+      "recent": "2026-09-22T08:44:35+09:00"
     }
   },
   "player": {
