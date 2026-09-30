@@ -478,6 +478,40 @@
           "rival_value": 83.0
         }
       }
+    },
+    {
+      "date": "2026-10-01",
+      "recorded_at": "2026-10-01T01:29:55+09:00",
+      "source_updated_at": "2026-09-30T21:18:49+09:00",
+      "data_through": "2026-09-30",
+      "values": {
+        "avg": 0.3157894736842105,
+        "hr": 38,
+        "rbi": 102
+      },
+      "races": {
+        "avg": {
+          "margin": 0.02051388313302943,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 0.2952755905511811
+        },
+        "hr": {
+          "margin": 3.0,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 35.0
+        },
+        "rbi": {
+          "margin": 18.0,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 84.0
+        }
+      }
     }
   ]
 }
