@@ -1,6 +1,6 @@
 {
-  "status": "error",
-  "attempted_at": "2026-10-02T01:26:33+09:00",
-  "error_type": "DataError",
+  "status": "ok",
+  "attempted_at": "2026-10-02T06:20:34+09:00",
+  "last_success_at": "2026-10-02T06:20:50+09:00",
   "mode": "scheduled"
 }
