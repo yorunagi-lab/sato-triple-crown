@@ -648,6 +648,40 @@
           "rival_value": 84.0
         }
       }
+    },
+    {
+      "date": "2026-10-08",
+      "recorded_at": "2026-10-08T01:30:50+09:00",
+      "source_updated_at": "2026-10-07T22:16:25+09:00",
+      "data_through": "2026-10-07",
+      "values": {
+        "avg": 0.308411214953271,
+        "hr": 39,
+        "rbi": 106
+      },
+      "races": {
+        "avg": {
+          "margin": 0.015607244729945957,
+          "rank": 1,
+          "rival_id": "1700131",
+          "rival_name": "増田 珠",
+          "rival_value": 0.29280397022332505
+        },
+        "hr": {
+          "margin": 4.0,
+          "rank": 1,
+          "rival_id": "1850183",
+          "rival_name": "森下 翔太",
+          "rival_value": 35.0
+        },
+        "rbi": {
+          "margin": 21.0,
+          "rank": 1,
+          "rival_id": "1600113",
+          "rival_name": "大山 悠輔",
+          "rival_value": 85.0
+        }
+      }
     }
   ]
 }
